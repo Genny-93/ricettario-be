@@ -2,12 +2,12 @@ spring:
   application:
     name: ricettario-be
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:5432/db_ricettario
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
     jpa:
       database-platform: org.hibernate.dialect.PostgreSQLDialect
       hibernate:
-        ddl-auto: update
+        ddl-auto: validate
       show-sql: true
