@@ -1,4 +1,4 @@
-package it.gennystabile.ricettario_be.utils.enumaration;
+package it.gennystabile.ricettario_be.utils.enumeration;
 
 public enum Colore {
     ROSSO,

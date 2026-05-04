@@ -1,7 +1,7 @@
 package it.gennystabile.ricettario_be.model;
 
 
-import it.gennystabile.ricettario_be.utils.enumaration.Colore;
+import it.gennystabile.ricettario_be.utils.enumeration.Colore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
