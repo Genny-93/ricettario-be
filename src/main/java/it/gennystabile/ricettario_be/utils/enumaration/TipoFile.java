@@ -1,4 +1,4 @@
-package it.gennystabile.ricettario_be.utils.enums;
+package it.gennystabile.ricettario_be.utils.enumaration;
 
 public enum TipoFile {
     IMMAGINE,

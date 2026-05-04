@@ -1,6 +1,6 @@
-package it.gennystabile.ricettario_be.model.repositories;
+package it.gennystabile.ricettario_be.repository;
 
-import it.gennystabile.ricettario_be.model.entities.ComposizioneRicetta;
+import it.gennystabile.ricettario_be.model.ComposizioneRicetta;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

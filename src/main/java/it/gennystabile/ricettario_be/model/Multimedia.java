@@ -1,7 +1,7 @@
-package it.gennystabile.ricettario_be.model.entities;
+package it.gennystabile.ricettario_be.model;
 
 
-import it.gennystabile.ricettario_be.utils.enums.TipoFile;
+import it.gennystabile.ricettario_be.utils.enumaration.TipoFile;
 import jakarta.persistence.*;
 
 @Entity

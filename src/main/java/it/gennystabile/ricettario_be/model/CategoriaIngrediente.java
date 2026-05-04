@@ -1,31 +1,16 @@
-package it.gennystabile.ricettario_be.model.entities;
+package it.gennystabile.ricettario_be.model;
 
 import jakarta.persistence.*;
 
-import java.util.List;
-
-
 @Entity
-@Table(name = "categorie_ricetta")
-public class CategoriaRicetta {
-
+@Table(name = "categorie_ingrediente")
+public class CategoriaIngrediente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "nome_cat", length = 100)
     private String nomeCategoria;
-
-    @ManyToMany(mappedBy = "categorie")
-    private List<Ricetta> ricette;
-
-    public List<Ricetta> getRicette() {
-        return ricette;
-    }
-
-    public void setRicette(List<Ricetta> ricette) {
-        this.ricette = ricette;
-    }
 
     public Long getId() {
         return id;
@@ -42,4 +27,5 @@ public class CategoriaRicetta {
     public void setNomeCategoria(String nomeCategoria) {
         this.nomeCategoria = nomeCategoria;
     }
+
 }

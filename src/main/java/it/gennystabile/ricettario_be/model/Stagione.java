@@ -1,4 +1,4 @@
-package it.gennystabile.ricettario_be.model.entities;
+package it.gennystabile.ricettario_be.model;
 
 
 import jakarta.persistence.*;
