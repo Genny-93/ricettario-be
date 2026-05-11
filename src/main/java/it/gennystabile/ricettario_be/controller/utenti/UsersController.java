@@ -38,7 +38,6 @@ public class UsersController {
         return ResponseEntity.ok(userOutputDto);
     }
 
-
     @PostMapping
     public ResponseEntity<UserOutputDto> register(@RequestBody UserInputDto userInputDto) {
         return ResponseEntity.ok(userService.register(userInputDto));
