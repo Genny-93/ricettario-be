@@ -21,15 +21,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
 
-    private final UserService userService;
     private final JwtAuthenticationFilter jwtAuthFilter;
 
-    public SecurityConfig(UserService userService, JwtAuthenticationFilter jwtAuthFilter) {
-        this.userService = userService;
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
     }
 
-
+    //Espone l'AuthenticationManager come Bean, necessario per richiamare la logica
+    // di login standard all'interno dell'AuthController.
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
             throws Exception {
@@ -49,17 +48,18 @@ public class SecurityConfig {
         return authProvider;
     }
 
+    // Metodo centrale per definire la catena dei filtri HTTP e le regole di accesso
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, DaoAuthenticationProvider authProvider) throws Exception {
         http
                 .csrf(csrf -> csrf.disable()) //Disabilito la protezione CSRF per far funzionare le chiamate POST, PUT, DELETE nelle API REST.
                 //Imposto l'applicativo come Stateless (Senza stato)-> ogni chiamata dovrà avere il suo Token".
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                //Definisco chi può fare cosa
+                //Definisco chi può fare cosa per gli endpoint URL
                 .authorizeHttpRequests(auth -> auth
                         // Rotte pubbliche: tutti possono registrarsi o vedere Swagger
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("/auth/**","/swagger-ui/**", "/swagger-ui/index.html/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/auth/**", "/swagger-ui/**", "/swagger-ui/index.html/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         //Rotte protette da ruolo: solo chi ha il ruolo "ADMIN" può cancellare un utente
                         // .requestMatchers("/users/deleteUser").hasRole("ADMIN")

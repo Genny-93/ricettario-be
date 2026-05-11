@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,10 +33,18 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody LoginRequest request) {
 
+        // L'AuthenticationManager riceve username e password.
+        // Se le credenziali sono corrette, l'autenticazione va a buon fine, recuperando automaticamente l'utente dal database.
+        // Se errate, lancia un'eccezione (BadCredentialsException) che restituisce errore 401 al client.
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
-        String jwtToken = jwtService.generateToken(request.getUsername());
+        // Dal risultato dell'autenticazione viene estratto l'oggetto UserDetails,
+        // che contiene i dettagli completi dell'utente appena verificato (compresi i ruoli).
+        UserDetails userDetails = (UserDetails) auth.getPrincipal();
+
+        // Viene richiamato il JwtService per generare la stringa del token, passando i dettagli completi.
+        String jwtToken = jwtService.generateToken(userDetails);
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         return ResponseEntity.ok(jwtToken);
