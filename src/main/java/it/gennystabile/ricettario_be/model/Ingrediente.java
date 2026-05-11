@@ -24,7 +24,7 @@ public class Ingrediente {
 
     @ManyToOne
     @JoinColumn(name = "created_by")
-    private Utente createdBy;
+    private User createdBy;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -82,11 +82,11 @@ public class Ingrediente {
         this.colorePrincipale = colorePrincipale;
     }
 
-    public Utente getCreatedBy() {
+    public User getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(Utente createdBy) {
+    public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
     }
 

@@ -47,11 +47,11 @@ public class Ricetta {
 
     @ManyToOne
     @JoinColumn(name = "created_by")
-    private Utente createdBy;
+    private User createdBy;
 
     @ManyToOne
     @JoinColumn(name = "updated_by")
-    private Utente updatedBy;
+    private User updatedBy;
 
     @OneToMany(mappedBy = "ricetta")
     private List<Multimedia> multimedia;
@@ -80,19 +80,19 @@ public class Ricetta {
         this.categorie = categoria;
     }
 
-    public Utente getUpdatedBy() {
+    public User getUpdatedBy() {
         return updatedBy;
     }
 
-    public void setUpdatedBy(Utente updatedBy) {
+    public void setUpdatedBy(User updatedBy) {
         this.updatedBy = updatedBy;
     }
 
-    public Utente getCreatedBy() {
+    public User getCreatedBy() {
         return createdBy;
     }
 
-    public void setCreatedBy(Utente createdBy) {
+    public void setCreatedBy(User createdBy) {
         this.createdBy = createdBy;
     }
 

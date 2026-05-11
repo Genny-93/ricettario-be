@@ -1,31 +1,46 @@
 package it.gennystabile.ricettario_be.model;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Table(name = "utenti")
-public class Utente {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username", nullable = false)
+    @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "password", nullable = false)
+    @Column(name = "password", unique = true, nullable = false)
     private String password;
 
     @Column(name = "email", nullable = false)
     private String email;
 
+    @Column(name = "role", nullable = false)
+    private String role;
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy="createdBy")
+    @OneToMany(mappedBy = "createdBy")
     private List<Ricetta> listaRicette;
 
     public List<Ricetta> getListaRicette() {
@@ -52,6 +67,7 @@ public class Utente {
         this.email = email;
     }
 
+
     public String getPassword() {
         return password;
     }
@@ -74,5 +90,32 @@ public class Utente {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role));
+    }
+
+    //TODO modificare il return e inserire la propria logica
+    @Override
+    public boolean isAccountNonExpired() { // l'account è scaduto?
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() { // l'account è bloccato?
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() { // la password è scaduta?
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() { // l'account è attivo?
+        return true;
     }
 }

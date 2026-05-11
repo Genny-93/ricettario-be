@@ -4,11 +4,17 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/db_ricettario
     username: postgres
-    password: postgres
+    password: ricettario
     driver-class-name: org.postgresql.Driver
-    jpa:
-      database-platform: org.hibernate.dialect.PostgreSQLDialect
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
       hibernate:
-        ddl-auto: validate
-      show-sql: true
-
+        format_sql: true
+        highlight_sql: true
+jwt:
+  secret: r0Q7XA4T4kmXgcEvHUlgka79Kj0E7o4/hPghvyK3l5I=
+  expiration: 3600000
