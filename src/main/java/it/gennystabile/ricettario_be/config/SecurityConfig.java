@@ -60,7 +60,10 @@ public class SecurityConfig {
                         // Rotte pubbliche: tutti possono registrarsi o vedere Swagger
                         .requestMatchers("/error").permitAll()
                         .requestMatchers("/auth/**", "/swagger-ui/**", "/swagger-ui/index.html/**", "/v3/api-docs/**").permitAll()
+                        //venendo prima della successiva, ha la priorità
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                        //tutto il resto delle chiamate sono limitate
+                        .requestMatchers("/users/**").hasRole("ADMIN")
                         //Rotte protette da ruolo: solo chi ha il ruolo "ADMIN" può cancellare un utente
                         // .requestMatchers("/users/deleteUser").hasRole("ADMIN")
                         // Rotta generica: per qualsiasi altra API non elencata sopra, bisogna essere almeno loggato

@@ -49,7 +49,6 @@ public class UsersController {
     }
 
     @DeleteMapping
-    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserOutputDto> deleteById(@RequestParam Long id) {
         return ResponseEntity.ok(userService.deleteById(id));
     }
