@@ -1,4 +1,4 @@
-package it.gennystabile.ricettario_be.dto.userdto;
+package it.gennystabile.ricettario_be.dto.user;
 
 
 import java.time.LocalDateTime;

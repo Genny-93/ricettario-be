@@ -1,7 +1,7 @@
 package it.gennystabile.ricettario_be.mapper;
 
-import it.gennystabile.ricettario_be.dto.userdto.UserInputDto;
-import it.gennystabile.ricettario_be.dto.userdto.UserOutputDto;
+import it.gennystabile.ricettario_be.dto.user.UserInputDto;
+import it.gennystabile.ricettario_be.dto.user.UserOutputDto;
 import it.gennystabile.ricettario_be.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -1,4 +1,4 @@
-package it.gennystabile.ricettario_be.utils.stringutils;
+package it.gennystabile.ricettario_be.utils;
 
 import java.util.ArrayList;
 import java.util.Collection;
