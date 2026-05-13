@@ -1,7 +1,7 @@
 package it.gennystabile.ricettario_be.controller.auth;
 
 
-import it.gennystabile.ricettario_be.dto.loginDto.LoginRequest;
+import it.gennystabile.ricettario_be.dto.logindto.LoginRequest;
 import it.gennystabile.ricettario_be.service.JwtService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;

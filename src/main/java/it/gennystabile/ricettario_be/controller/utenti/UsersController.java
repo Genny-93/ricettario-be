@@ -1,13 +1,12 @@
 package it.gennystabile.ricettario_be.controller.utenti;
 
 
-import it.gennystabile.ricettario_be.dto.userDto.UserInputDto;
-import it.gennystabile.ricettario_be.dto.userDto.UserOutputDto;
+import it.gennystabile.ricettario_be.dto.userdto.UserInputDto;
+import it.gennystabile.ricettario_be.dto.userdto.UserOutputDto;
 import it.gennystabile.ricettario_be.service.UserService;
 import it.gennystabile.ricettario_be.utils.constant.controller.UsersCostanti;
 import it.gennystabile.ricettario_be.utils.enumeration.Role;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package it.gennystabile.ricettario_be.dto.loginDto;
+package it.gennystabile.ricettario_be.dto.logindto;
 
 public class LoginRequest {
 
