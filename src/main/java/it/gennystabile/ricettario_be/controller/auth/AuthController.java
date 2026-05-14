@@ -45,6 +45,10 @@ public class AuthController {
 
         // Viene richiamato il JwtService per generare la stringa del token, passando i dettagli completi.
         String jwtToken = jwtService.generateToken(userDetails);
+
+        // 1. Accede al magazzino globale della sicurezza (SecurityContextHolder)
+// 2. Recupera il contenitore dei dati dell'utente corrente (getContext())
+// 3. Inietta l'oggetto 'auth' che contiene identità e ruoli (setAuthentication(auth))
         SecurityContextHolder.getContext().setAuthentication(auth);
 
         return ResponseEntity.ok(jwtToken);
