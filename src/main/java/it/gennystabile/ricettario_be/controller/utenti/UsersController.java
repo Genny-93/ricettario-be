@@ -4,7 +4,7 @@ package it.gennystabile.ricettario_be.controller.utenti;
 import it.gennystabile.ricettario_be.dto.user.UserInputDto;
 import it.gennystabile.ricettario_be.dto.user.UserOutputDto;
 import it.gennystabile.ricettario_be.service.UserService;
-import it.gennystabile.ricettario_be.utils.constant.controller.UsersCostanti;
+import it.gennystabile.ricettario_be.utils.constant.controller.UsersConstants;
 import it.gennystabile.ricettario_be.utils.enumeration.Role;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping(UsersCostanti.REQUEST_MAPPING_UTENTI)
+@RequestMapping(UsersConstants.REQUEST_MAPPING_UTENTI)
 public class UsersController {
 
 

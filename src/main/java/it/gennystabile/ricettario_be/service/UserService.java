@@ -5,7 +5,7 @@ import it.gennystabile.ricettario_be.dto.user.UserOutputDto;
 import it.gennystabile.ricettario_be.mapper.UserMapper;
 import it.gennystabile.ricettario_be.model.User;
 import it.gennystabile.ricettario_be.repository.UserRepository;
-import it.gennystabile.ricettario_be.utils.constant.controller.UsersCostanti;
+import it.gennystabile.ricettario_be.utils.constant.controller.UsersConstants;
 import it.gennystabile.ricettario_be.utils.enumeration.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -52,10 +52,9 @@ public class UserService implements UserDetailsService {
     public UserOutputDto register(UserInputDto userInputDto) {
         User user = userMapper.toUtente(userInputDto);
         user.setCreatedAt(LocalDateTime.now());
-        user.setRole(UsersCostanti.USER);
+        user.setRole(UsersConstants.USER);
         user.setPassword(passwordEncoder.encode(userInputDto.getPassword()));
-        UserOutputDto userOutputDto = userMapper.toOutputDto(userRepository.save(user));
-        return userOutputDto;
+        return userMapper.toOutputDto(userRepository.save(user));
     }
 
     public UserOutputDto deleteById(Long id) {

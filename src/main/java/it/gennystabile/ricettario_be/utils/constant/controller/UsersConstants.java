@@ -1,12 +1,13 @@
 package it.gennystabile.ricettario_be.utils.constant.controller;
 
 
-public class UsersCostanti {
+public class UsersConstants {
 
     // MAPPING
 
     public static final String REQUEST_MAPPING_UTENTI = "/users";
     public static final String REQUEST_MAPPING_AUTH = "/auth";
+    public static final String REQUEST_MAPPING_RICETTE = "/recipes";
 
 
 

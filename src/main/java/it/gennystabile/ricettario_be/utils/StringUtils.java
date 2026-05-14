@@ -150,6 +150,31 @@ public final class StringUtils {
     }
 
     /**
+     * Converte una stringa in formato kebab-case.
+     * Gestisce la trasformazione dal formato camelCase, rimuove le spaziature ai bordi e
+     * converte spazi, underscore e virgole in trattini singoli, evitando trattini multipli.
+     *
+     * @param s La stringa di input da convertire.
+     * @return La stringa convertita in kebab-case, null se l'input è null,
+     *         oppure una stringa vuota se l'input è vuoto o contiene esclusivamente spazi.
+     */
+    public static String toKebabCase(String s) {
+        if (s == null || s.trim().isEmpty()) return s == null ? null : "";
+
+        //Il metodo trim() assicura che non si formino trattini all'inizio o alla fine
+        return s.trim()
+                //Inserisce un trattino ("-") tra il Gruppo 1 ([a-z]) della regex ("$1") e il Gruppo 2 ([A-Z]+) della regex ("$2").
+                .replaceAll("([a-z])([A-Z]+)", "$1-$2")
+                //Pattern: [\\s_,] = Qualsiasi spazio vuoto, underscore o virgola.
+                // Il quantificatore "+" indica di cercare sequenze di 1 o più di questi caratteri.
+                // Sostituisce l'intera sequenza intercettata con un unico trattino ("-").
+                // Il metodo replace trova specifiche porzioni di testo all'interno di una stringa e le sostituisce
+                // con qualcos'altro. Il metodo replaceAll lavora con le regex.
+                .replaceAll("[\\s_,]+", "-")            // Sostituisce spazi, underscore e virgole
+                .toLowerCase();                         // Converte in minuscolo
+    }
+
+    /**
      * Converte una stringa da kebab-case a camelCase.
      *
      * @param s La stringa da convertire.

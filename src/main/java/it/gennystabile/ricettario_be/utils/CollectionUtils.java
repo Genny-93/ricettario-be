@@ -1,9 +1,6 @@
 package it.gennystabile.ricettario_be.utils;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Utility class per la gestione e manipolazione di collezioni Java.
@@ -65,5 +62,30 @@ public class CollectionUtils {
         return !isEmpty(col);
     }
 
+    /**
+     * Estrae tutti gli elementi duplicati presenti in una lista.
+     * <p>
+     * L'algoritmo mantiene inalterato l'ordine cronologico in cui i duplicati
+     * vengono rilevati per la prima volta. La complessità temporale è O(N).
+     * </p>
+     *
+     * @param <T>  il tipo degli elementi contenuti nella lista
+     * @param list la lista da analizzare (può essere null)
+     * @return una nuova lista contenente esclusivamente gli elementi duplicati,
+     * oppure una lista vuota se l'input è nullo o non vi sono duplicati
+     */
+    public static <T> List<T> getDuplicates(final List<T> list) {
+        if (list == null || list.isEmpty()) return Collections.emptyList();
+
+        Set<T> elementiDuplicati = new HashSet<>();
+        Set<T> elementiVisti = new HashSet<>();
+
+        list.forEach(element -> {
+            if (!elementiVisti.add(element)) {
+                elementiDuplicati.add(element);
+            }
+        });
+        return new ArrayList<>(elementiDuplicati);
+    }
 
 }
