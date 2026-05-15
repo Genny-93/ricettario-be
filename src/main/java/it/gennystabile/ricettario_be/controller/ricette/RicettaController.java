@@ -16,11 +16,11 @@ import static it.gennystabile.ricettario_be.utils.constant.controller.UsersConst
 @RestController
 @RequestMapping(REQUEST_MAPPING_RICETTE)
 @PreAuthorize(SecurityConstants.ALL_PROFILES)
-public class RicetteController {
+public class RicettaController {
 
     private final RicettaService ricettaService;
 
-    public RicetteController(RicettaService ricettaService) {
+    public RicettaController(RicettaService ricettaService) {
         this.ricettaService = ricettaService;
     }
 
