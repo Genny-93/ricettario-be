@@ -6,7 +6,10 @@ import it.gennystabile.ricettario_be.dto.user.UserOutputDto;
 import it.gennystabile.ricettario_be.service.UserService;
 import it.gennystabile.ricettario_be.utils.constant.controller.UsersConstants;
 import it.gennystabile.ricettario_be.utils.enumeration.Role;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(UsersConstants.REQUEST_MAPPING_UTENTI)
+@Validated
 public class UserController {
 
 
@@ -38,12 +42,13 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserOutputDto> register(@RequestBody UserInputDto userInputDto) {
+    public ResponseEntity<UserOutputDto> register(@Valid @RequestBody UserInputDto userInputDto) {
         return ResponseEntity.ok(userService.register(userInputDto));
     }
 
     @PutMapping
-    public ResponseEntity<String> modififyRole(@RequestParam Long id, @RequestParam Role role) {
+    public ResponseEntity<String> modififyRole(@NotNull @RequestParam Long id,
+                                               @NotNull @RequestParam Role role) {
         return ResponseEntity.ok(userService.modifyRole(id, role));
     }
 

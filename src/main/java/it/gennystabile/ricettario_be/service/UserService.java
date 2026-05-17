@@ -2,6 +2,7 @@ package it.gennystabile.ricettario_be.service;
 
 import it.gennystabile.ricettario_be.dto.user.UserInputDto;
 import it.gennystabile.ricettario_be.dto.user.UserOutputDto;
+import it.gennystabile.ricettario_be.exception.ResourceNotFoundException;
 import it.gennystabile.ricettario_be.mapper.UserMapper;
 import it.gennystabile.ricettario_be.model.User;
 import it.gennystabile.ricettario_be.repository.UserRepository;
@@ -45,7 +46,7 @@ public class UserService implements UserDetailsService {
     }
 
     public UserOutputDto getById(Long id) {
-        return userMapper.toOutputDto(userRepository.findById(id).orElse(null));
+        return userMapper.toOutputDto(getUser(id));
     }
 
     public UserOutputDto register(UserInputDto userInputDto) {
@@ -57,24 +58,23 @@ public class UserService implements UserDetailsService {
     }
 
     public UserOutputDto deleteById(Long id) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            userRepository.deleteById(id);
-            return userMapper.toOutputDto(user.get());
-        }
-        return null;
+        User user = getUser(id);
+
+        userRepository.deleteById(id);
+        return userMapper.toOutputDto(user);
     }
 
-    public String modifyRole(Long id, Role role){
-        Optional<User> user = userRepository.findById(id);
-        if(user.isPresent()){
-            user.get().setRole(role.toString());
-            userRepository.save(user.get());
-            return "Utente Modificato";
-        }
-        return "Utente non Trovato";
+
+    public String modifyRole(Long id, Role role) {
+        User user = getUser(id);
+        user.setRole(role.toString());
+        userRepository.save(user);
+        return "Utente Modificato";
     }
 
+    private User getUser(Long id) {
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Utente con id " + id + " non trovato"));
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

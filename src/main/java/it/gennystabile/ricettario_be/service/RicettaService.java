@@ -2,6 +2,7 @@ package it.gennystabile.ricettario_be.service;
 
 import it.gennystabile.ricettario_be.dto.ricetta.RicettaInputDto;
 import it.gennystabile.ricettario_be.dto.ricetta.RicettaOutputDto;
+import it.gennystabile.ricettario_be.exception.ResourceNotFoundException;
 import it.gennystabile.ricettario_be.mapper.RicettaMapper;
 import it.gennystabile.ricettario_be.model.Ricetta;
 import it.gennystabile.ricettario_be.model.User;
@@ -39,16 +40,13 @@ public class RicettaService {
     }
 
     public RicettaOutputDto getRicettaById(Long id) {
-        Optional<Ricetta> ricetta = ricettaRepository.findById(id);
-        if (ricetta.isEmpty()) return null;
-        return ricettaMapper.toOutputDto(ricetta.get());
+        Ricetta ricetta = findRicettaById(id);
+        return ricettaMapper.toOutputDto(ricetta);
     }
 
-    public RicettaOutputDto getRicettaByTitolo(String titolo) {
 
-        Optional<Ricetta> ricetta = ricettaRepository.findByTitolo(titolo);
-        if (ricetta.isEmpty()) return null;
-        return ricettaMapper.toOutputDto(ricetta.get());
+    public RicettaOutputDto getRicettaByTitolo(String titolo) {
+        return ricettaMapper.toOutputDto(findRicettaByTitle(titolo));
     }
 
     public RicettaOutputDto postRicetta(RicettaInputDto ricettaInputDto) throws Exception {
@@ -69,4 +67,20 @@ public class RicettaService {
         ricetta.setCreatedAt(LocalDateTime.now());
         ricetta.setUpdatedAt(LocalDateTime.now());
     }
+
+
+    private Ricetta findRicettaById(Long id) {
+        return ricettaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ricetta con id " + id + " non trovata!"));
+    }
+
+    private Ricetta findRicettaByTitle(String titolo) {
+        return ricettaRepository.findByTitolo(titolo)
+                .orElseThrow(() -> new ResourceNotFoundException("Ricetta con titolo '" + titolo + "' non trovata!"));
+    }
+
+      /* private <T> Ricetta getRicetta(T parametroDiRicerca) {
+        return (parametroDiRicerca instanceof String) ?
+                ricettaRepository.findByTitolo(parametroDiRicerca.toString()).orElseThrow(() -> new ResourceNotFoundException("Ricetta con titolo " + parametroDiRicerca + " non trovata!"))
+                : ricettaRepository.findById((Long) parametroDiRicerca).orElseThrow(() -> new ResourceNotFoundException("Ricetta con id " + parametroDiRicerca + " non trovata!"));
+    }*/
 }
