@@ -8,6 +8,7 @@ import it.gennystabile.ricettariobe.utils.constant.ControllersConstants;
 import it.gennystabile.ricettariobe.utils.enumeration.Role;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -43,12 +44,12 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserOutputDto> register(@Valid @RequestBody UserInputDto userInputDto) {
-        return ResponseEntity.ok(userService.register(userInputDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(userInputDto));
     }
 
     @PutMapping
     public ResponseEntity<String> modififyRole(@NotNull @RequestParam Long id,
-                                               @NotNull @RequestParam Role role) {
+                                               @RequestParam(required = true) Role role) {
         return ResponseEntity.ok(userService.modifyRole(id, role));
     }
 

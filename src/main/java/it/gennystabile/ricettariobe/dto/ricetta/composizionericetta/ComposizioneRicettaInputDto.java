@@ -1,13 +1,17 @@
 package it.gennystabile.ricettariobe.dto.ricetta.composizionericetta;
 
 
-
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 public class ComposizioneRicettaInputDto {
 
-
+    @NotBlank(message = "Il nome dell'ingrediente è obbligatorio")
     private String ingrediente;
 
+    @NotNull(message = "La quantità è obbligatoria")
+    @Positive(message = "La quantità deve essere maggiore di zero")
     private Float quantita;
 
     private String unitaDiMisura;

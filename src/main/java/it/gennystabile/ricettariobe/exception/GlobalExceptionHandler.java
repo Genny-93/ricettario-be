@@ -1,12 +1,17 @@
 package it.gennystabile.ricettariobe.exception;
 
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.List;
 
 
 @ControllerAdvice
@@ -89,5 +94,51 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
+    //  Gestione errori del @RequestBody (@Valid)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<GenericErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
+
+        List<String> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .toList();
+
+        String dettaglioErrori = String.join(", ", errors);
+
+        GenericErrorResponse error = new GenericErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Validazione fallita (Campi del corpo della richiesta non validi)",
+                dettaglioErrori
+        );
+        log.warn("Errore di validazione del DTO intercettato: {}", dettaglioErrori);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+
+    // Gestione errori di @PathVariable e @RequestParam (@Validated)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<GenericErrorResponse> handleConstraintViolationException(ConstraintViolationException ex) {
+        List<String> errors = ex.getConstraintViolations()
+                .stream()
+                .map(violation -> {
+                    String paramName = "";
+                    for (Path.Node node : violation.getPropertyPath()) {
+                        paramName = node.getName();
+                    }
+                    return paramName + ": " + violation.getMessage();
+                })
+                .toList();
+
+        String dettaglioErrori = String.join(", ", errors);
+
+        GenericErrorResponse error = new GenericErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                "Validazione fallita (Parametri URL non validi)",
+                dettaglioErrori
+        );
+        log.warn("Errore di validazione ndei parametri URL intercettato: {}", dettaglioErrori);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
 
 }

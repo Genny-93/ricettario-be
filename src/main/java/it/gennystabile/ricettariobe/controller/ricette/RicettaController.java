@@ -42,7 +42,7 @@ public class RicettaController {
         return (ricetta == null) ? ResponseEntity.noContent().build() : ResponseEntity.ok(ricetta);
     }
 
-    @GetMapping("{title}")
+    @GetMapping("/title/{title}")
     public ResponseEntity<RicettaOutputDto> getRicettaByTitolo(@NotBlank @PathVariable String title) {
         RicettaOutputDto ricetta = ricettaService.getRicettaByTitolo(title);
         return (ricetta == null) ? ResponseEntity.noContent().build() : ResponseEntity.ok(ricetta);
@@ -56,7 +56,7 @@ public class RicettaController {
 
     @PostMapping(REQUEST_MAPPING_CATEGORIE_RICETTE)
     @PreAuthorize(SecurityConstants.ADMIN)
-    public ResponseEntity<CategoriaOutputDto> postCategoriaRicetta(@RequestParam String nomeCategoria) {
+    public ResponseEntity<CategoriaOutputDto> postCategoriaRicetta(@NotBlank @RequestParam String nomeCategoria) {
         return ResponseEntity.ok(ricettaService.postCategoria(nomeCategoria));
     }
 }

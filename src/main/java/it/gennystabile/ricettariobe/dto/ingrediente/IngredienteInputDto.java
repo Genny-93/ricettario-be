@@ -1,11 +1,19 @@
 package it.gennystabile.ricettariobe.dto.ingrediente;
 
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.Set;
 
 public class IngredienteInputDto {
+
+    @NotBlank(message = "Il nome dell'ingrediente è obbligatorio")
     private String nome;
+
+    @NotBlank(message = "Il nome della categoria è obbligatorio")
     private String nomeCategoria;
-    private Set<String> stagioni;
+
+
+    private Set<@NotBlank String> stagioni;
 
     public Set<String> getStagioni() {
         return stagioni;

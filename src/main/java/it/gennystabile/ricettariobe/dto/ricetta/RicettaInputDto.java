@@ -3,18 +3,21 @@ package it.gennystabile.ricettariobe.dto.ricetta;
 import it.gennystabile.ricettariobe.dto.multimedia.MultimediaInputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.composizionericetta.ComposizioneRicettaInputDto;
 import it.gennystabile.ricettariobe.model.CategoriaIngrediente;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
 import java.util.List;
 
 public class RicettaInputDto {
 
-    @NotBlank
+    @NotBlank(message = "Il titolo è obbligatorio")
     private String titolo;
 
     @NotNull
+    @Min(value = 1, message = "Il tempo di preparazione deve essere di almeno 1 minuto")
     private Short tempoDiPreparazione;
 
+    @NotNull(message = "La difficoltà è obbligatoria")
     @DecimalMin(value = "0.5", message = "La difficoltà non può essere inferiore a 0.5")
     @DecimalMax(value = "5.0", message = "La difficoltà non può essere superiore a 5.0")
     private Float difficolta;
@@ -25,11 +28,13 @@ public class RicettaInputDto {
     @NotBlank
     private String descBreve;
 
+    @NotEmpty(message = "Inserire almeno una categoria")
     private List<String> categorieRicetta;
 
     private List<MultimediaInputDto> listaMultimedia;
 
-    private List<ComposizioneRicettaInputDto> composizioneRicetta;
+    @NotEmpty(message = "La composizione della ricetta non può essere vuota")
+    private List<@Valid ComposizioneRicettaInputDto> composizioneRicetta;
 
     public List<ComposizioneRicettaInputDto> getComposizioneRicetta() {
         return composizioneRicetta;
