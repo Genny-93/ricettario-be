@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
                 "Risorsa non trovata",
                 ex.getMessage()
         );
-        log.warn("Errore intercettato: " + ex);
+        log.warn("Errore intercettato: {}", ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
     }
 
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
                 "Bad Request",
                 ex.getMessage()
         );
-        log.warn("Errore intercettato: " + ex);
+        log.warn("Errore intercettato: {} ", ex);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
     }
 
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
                 "Permessi insufficienti per completare l'operazione.",
                 ex.getMessage()
         );
-        log.warn("Errore intercettato: " + ex);
+        log.warn("Errore intercettato: {} ", ex);
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
     }
 
@@ -60,7 +60,7 @@ public class GlobalExceptionHandler {
                 "Internal Server Error",
                 ex.getMessage()
         );
-        log.warn("Errore intercettato: " + ex);
+        log.warn("Errore intercettato:{} ", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 
@@ -75,7 +75,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
-    //TODO gestire 401
+    // Gestione 401 Non Autorizzato
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<GenericErrorResponse> handleUnauthorizedException(UnauthorizedException ex) {
+        GenericErrorResponse error = new GenericErrorResponse(
+                HttpStatus.UNAUTHORIZED.value(),
+                "Mancano credenziali di autenticazione valide",
+                ex.getMessage()
+        );
+        log.warn("Errore intercettato: {}", ex);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
 
 
 }
