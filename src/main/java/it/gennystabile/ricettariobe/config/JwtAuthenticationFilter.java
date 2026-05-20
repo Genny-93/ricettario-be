@@ -1,5 +1,6 @@
 package it.gennystabile.ricettariobe.config;
 
+import io.jsonwebtoken.Claims;
 import it.gennystabile.ricettariobe.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -33,10 +34,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-// 1. Lettura dell'header "Authorization" dalla richiesta HTTP
+        // 1. Lettura dell'header "Authorization" dalla richiesta HTTP
         final String authHeader = request.getHeader("Authorization");
-        final String jwt;
-        final String username;
 
         // 2. Controllo della presenza e della correttezza formale dell'header
         // Lo standard prevede che il token sia preceduto dalla parola "Bearer "
@@ -50,11 +49,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         // 3. Estrazione della stringa JWT pura
         // Si escludono i primi 7 caratteri corrispondenti a "Bearer "
-        jwt = authHeader.substring(7);
-
+        final String jwt = authHeader.substring(7);
+        final String username;
         // 4. Estrazione dell'identificativo dell'utente (es. username) decodificando il token
         try {
+
             username = jwtService.extractUsername(jwt);
+
+
         } catch (Exception e) {
             // Se il token è scaduto o alterato, l'eccezione viene catturata.
             // Si interrompe il processo di autorizzazione e si passa al filtro successivo (che negherà l'accesso).

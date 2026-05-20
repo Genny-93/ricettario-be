@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -75,12 +76,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
-    // Gestione 401 Non Autorizzato
-    @ExceptionHandler(UnauthorizedException.class)
-    public ResponseEntity<GenericErrorResponse> handleUnauthorizedException(UnauthorizedException ex) {
+    // Gestione 401 Non Autorizzato (Sia per eccezioni custom che per fallimenti di Spring Security)
+    // Inserendo entrambe le classi nell'array, l'handler intercetta sia il login fallito sia gli errori manuali
+    @ExceptionHandler({UnauthorizedException.class, AuthenticationException.class})
+    public ResponseEntity<GenericErrorResponse> handleUnauthorizedException(Exception ex) {
         GenericErrorResponse error = new GenericErrorResponse(
                 HttpStatus.UNAUTHORIZED.value(),
-                "Mancano credenziali di autenticazione valide",
+                "Credenziali di Autenticazione non valide",
                 ex.getMessage()
         );
         log.warn("Errore intercettato: {}", ex);

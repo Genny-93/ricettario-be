@@ -1,6 +1,7 @@
 package it.gennystabile.ricettariobe.dto.ricetta;
 
 import it.gennystabile.ricettariobe.dto.multimedia.MultimediaInputDto;
+import it.gennystabile.ricettariobe.dto.ricetta.composizionericetta.ComposizioneRicettaInputDto;
 import it.gennystabile.ricettariobe.model.CategoriaIngrediente;
 import jakarta.validation.constraints.*;
 
@@ -27,6 +28,16 @@ public class RicettaInputDto {
     private List<String> categorieRicetta;
 
     private List<MultimediaInputDto> listaMultimedia;
+
+    private List<ComposizioneRicettaInputDto> composizioneRicetta;
+
+    public List<ComposizioneRicettaInputDto> getComposizioneRicetta() {
+        return composizioneRicetta;
+    }
+
+    public void setComposizioneRicetta(List<ComposizioneRicettaInputDto> composizioneRicetta) {
+        this.composizioneRicetta = composizioneRicetta;
+    }
 
     public List<String> getCategorieRicetta() {
         return categorieRicetta;
