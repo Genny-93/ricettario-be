@@ -77,7 +77,7 @@ public class RicettaService {
         //setto i campi della ricetta
         setRicetta(ricetta, autore);
 
-        //setto la Categoria
+        //setto la CategoriaRicetta
         List<CategoriaRicetta> listaCategorieRicetta = new ArrayList<>();
         ricettaInputDto.getCategorieRicetta().forEach(categoria -> {
             Optional<CategoriaRicetta> categoriaRicetta = categoriaRicettaRepository.findByNomeCategoria(categoria);
