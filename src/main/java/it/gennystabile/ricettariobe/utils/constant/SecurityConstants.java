@@ -1,4 +1,4 @@
-package it.gennystabile.ricettariobe.utils.constant.controller;
+package it.gennystabile.ricettariobe.utils.constant;
 
 public class SecurityConstants {
 

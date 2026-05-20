@@ -2,9 +2,12 @@ package it.gennystabile.ricettariobe.controller.ingredienti;
 
 import it.gennystabile.ricettariobe.dto.ingrediente.IngredienteInputDto;
 import it.gennystabile.ricettariobe.dto.ingrediente.IngredienteOutputDto;
+import it.gennystabile.ricettariobe.dto.ingrediente.categoria.CategoriaIngredienteInputDto;
+import it.gennystabile.ricettariobe.dto.ingrediente.categoria.CategoriaIngredienteOutputDto;
 import it.gennystabile.ricettariobe.service.IngredienteService;
-import it.gennystabile.ricettariobe.utils.constant.controller.ControllersConstants;
-import it.gennystabile.ricettariobe.utils.constant.controller.SecurityConstants;
+import it.gennystabile.ricettariobe.utils.constant.ControllersConstants;
+import it.gennystabile.ricettariobe.utils.constant.SecurityConstants;
+import it.gennystabile.ricettariobe.utils.enumeration.Colore;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -26,16 +29,37 @@ public class IngredienteController {
 
     @GetMapping
     public ResponseEntity<List<IngredienteOutputDto>> getAllIngredients() {
-        return ResponseEntity.ok(ingredienteService.getAllIngredients());
+        return ResponseEntity.ok(ingredienteService.getAllIngredienti());
     }
 
     @GetMapping("{name}")
     public ResponseEntity<IngredienteOutputDto> getIngredientByName(@PathVariable String name) {
-        return ResponseEntity.ok(ingredienteService.getIngredientByName(name));
+        return ResponseEntity.ok(ingredienteService.getIngredienteByNome(name));
     }
 
     @PostMapping
-    public ResponseEntity<IngredienteOutputDto> postIngredient(@RequestBody IngredienteInputDto inputDto) {
-        return ResponseEntity.ok(ingredienteService.postIngredient(inputDto));
+    public ResponseEntity<IngredienteOutputDto> postIngredient(@RequestBody IngredienteInputDto inputDto,
+                                                               @RequestParam Colore colore) {
+        return ResponseEntity.ok(ingredienteService.postIngrediente(inputDto, colore));
     }
+
+    @PreAuthorize(SecurityConstants.ADMIN)
+    @DeleteMapping
+    public ResponseEntity<IngredienteOutputDto> deleteIngredient(@RequestParam String nome) {
+        return ResponseEntity.ok(ingredienteService.deleteByNome(nome));
+
+    }
+
+    @PreAuthorize(SecurityConstants.ADMIN)
+    @PostMapping(ControllersConstants.REQUEST_MAPPING_CATEGORIE_INGREDIENTI)
+    public ResponseEntity<CategoriaIngredienteOutputDto> postCategoriaIngrediente(@RequestBody CategoriaIngredienteInputDto inputDto) {
+        return ResponseEntity.ok(ingredienteService.postCategoriaIngrediente(inputDto));
+    }
+
+    @PreAuthorize(SecurityConstants.ADMIN)
+    @GetMapping(ControllersConstants.REQUEST_MAPPING_CATEGORIE_INGREDIENTI)
+    public ResponseEntity<List<CategoriaIngredienteOutputDto>> getAllCategorieIngrediente() {
+        return ResponseEntity.ok(ingredienteService.getAllCategoriaIngrediente());
+    }
+
 }

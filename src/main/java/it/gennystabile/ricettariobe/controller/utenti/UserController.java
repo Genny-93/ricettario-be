@@ -4,7 +4,7 @@ package it.gennystabile.ricettariobe.controller.utenti;
 import it.gennystabile.ricettariobe.dto.user.UserInputDto;
 import it.gennystabile.ricettariobe.dto.user.UserOutputDto;
 import it.gennystabile.ricettariobe.service.UserService;
-import it.gennystabile.ricettariobe.utils.constant.controller.ControllersConstants;
+import it.gennystabile.ricettariobe.utils.constant.ControllersConstants;
 import it.gennystabile.ricettariobe.utils.enumeration.Role;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;

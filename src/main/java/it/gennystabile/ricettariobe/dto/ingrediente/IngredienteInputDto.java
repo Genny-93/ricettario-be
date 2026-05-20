@@ -1,13 +1,19 @@
 package it.gennystabile.ricettariobe.dto.ingrediente;
 
-import it.gennystabile.ricettariobe.model.CategoriaIngrediente;
-import it.gennystabile.ricettariobe.utils.enumeration.Colore;
+import java.util.Set;
 
 public class IngredienteInputDto {
     private String nome;
-    private Colore colorePredominante;
-    private CategoriaIngrediente categoriaIngrediente;
+    private String nomeCategoria;
+    private Set<String> stagioni;
 
+    public Set<String> getStagioni() {
+        return stagioni;
+    }
+
+    public void setStagioni(Set<String> stagioni) {
+        this.stagioni = stagioni;
+    }
 
     public String getNome() {
         return nome;
@@ -17,19 +23,11 @@ public class IngredienteInputDto {
         this.nome = nome;
     }
 
-    public Colore getColorePredominante() {
-        return colorePredominante;
+    public String getNomeCategoria() {
+        return nomeCategoria;
     }
 
-    public void setColorePredominante(Colore colorePredominante) {
-        this.colorePredominante = colorePredominante;
-    }
-
-    public CategoriaIngrediente getCategoriaIngrediente() {
-        return categoriaIngrediente;
-    }
-
-    public void setCategoriaIngrediente(CategoriaIngrediente categoriaIngrediente) {
-        this.categoriaIngrediente = categoriaIngrediente;
+    public void setNomeCategoria(String nomeCategoria) {
+        this.nomeCategoria = nomeCategoria;
     }
 }

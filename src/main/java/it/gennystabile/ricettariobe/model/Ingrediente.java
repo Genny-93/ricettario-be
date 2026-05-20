@@ -8,6 +8,7 @@ import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "ingredienti")
@@ -43,7 +44,7 @@ public class Ingrediente {
             inverseJoinColumns = @JoinColumn(name = "id_stagione")
 
     )
-    private List<Stagione> stagioni;
+    private Set<Stagione> stagioni;
 
     public CategoriaIngrediente getCategoriaIngrediente() {
         return categoriaIngrediente;
@@ -53,11 +54,11 @@ public class Ingrediente {
         this.categoriaIngrediente = categoriaIngrediente;
     }
 
-    public List<Stagione> getStagioni() {
+    public Set<Stagione> getStagioni() {
         return stagioni;
     }
 
-    public void setStagioni(List<Stagione> stagioni) {
+    public void setStagioni(Set<Stagione> stagioni) {
         this.stagioni = stagioni;
     }
 

@@ -6,7 +6,7 @@ import it.gennystabile.ricettariobe.exception.ResourceNotFoundException;
 import it.gennystabile.ricettariobe.mapper.UserMapper;
 import it.gennystabile.ricettariobe.model.User;
 import it.gennystabile.ricettariobe.repository.UserRepository;
-import it.gennystabile.ricettariobe.utils.constant.controller.ControllersConstants;
+import it.gennystabile.ricettariobe.utils.constant.ControllersConstants;
 import it.gennystabile.ricettariobe.utils.enumeration.Role;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

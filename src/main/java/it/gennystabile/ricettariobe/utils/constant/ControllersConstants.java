@@ -1,4 +1,5 @@
-package it.gennystabile.ricettariobe.utils.constant.controller;
+package it.gennystabile.ricettariobe.utils.constant;
+
 
 
 public class ControllersConstants {
@@ -10,7 +11,7 @@ public class ControllersConstants {
     public static final String REQUEST_MAPPING_RICETTE = "/recipes";
     public static final String REQUEST_MAPPING_INGREDIENTI = "/ingredients";
     public static final String REQUEST_MAPPING_CATEGORIE_RICETTE = "/categories";
-
+    public static final String REQUEST_MAPPING_CATEGORIE_INGREDIENTI = "/categories";
 
     //Costanti ROLES
 

@@ -5,7 +5,7 @@ import it.gennystabile.ricettariobe.dto.ricetta.RicettaInputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.RicettaOutputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.categoria.CategoriaOutputDto;
 import it.gennystabile.ricettariobe.service.RicettaService;
-import it.gennystabile.ricettariobe.utils.constant.controller.SecurityConstants;
+import it.gennystabile.ricettariobe.utils.constant.SecurityConstants;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static it.gennystabile.ricettariobe.utils.constant.controller.ControllersConstants.REQUEST_MAPPING_CATEGORIE_RICETTE;
-import static it.gennystabile.ricettariobe.utils.constant.controller.ControllersConstants.REQUEST_MAPPING_RICETTE;
+import static it.gennystabile.ricettariobe.utils.constant.ControllersConstants.REQUEST_MAPPING_CATEGORIE_RICETTE;
+import static it.gennystabile.ricettariobe.utils.constant.ControllersConstants.REQUEST_MAPPING_RICETTE;
 
 @RestController
 @RequestMapping(REQUEST_MAPPING_RICETTE)

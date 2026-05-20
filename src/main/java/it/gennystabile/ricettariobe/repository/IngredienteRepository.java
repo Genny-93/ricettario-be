@@ -10,6 +10,9 @@ import java.util.Optional;
 public interface IngredienteRepository extends JpaRepository<Ingrediente, Long> {
 
     Optional<Ingrediente> findByNome(String nome);
+
     boolean existsByNomeIgnoreCase(String nome);
+
+    Optional<Ingrediente> deleteByNome(String nome);
 
 }

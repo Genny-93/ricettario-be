@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static it.gennystabile.ricettariobe.utils.constant.controller.ControllersConstants.REQUEST_MAPPING_AUTH;
+import static it.gennystabile.ricettariobe.utils.constant.ControllersConstants.REQUEST_MAPPING_AUTH;
 
 @RestController
 @RequestMapping(REQUEST_MAPPING_AUTH)
