@@ -37,7 +37,7 @@ public class Ricetta {
     private List<CategoriaRicetta> categorie;
 
     @OneToMany(mappedBy = "ricetta", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ComposizioneRicetta> composizioni;
+    private List<ComposizioneRicetta> composizioneRicetta;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -53,15 +53,15 @@ public class Ricetta {
     @JoinColumn(name = "updated_by")
     private User updatedBy;
 
-    @OneToMany(mappedBy = "ricetta")
+    @OneToMany(mappedBy = "ricetta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Multimedia> multimedia;
 
-    public List<ComposizioneRicetta> getComposizioni() {
-        return composizioni;
+    public List<ComposizioneRicetta> getComposizioneRicetta() {
+        return composizioneRicetta;
     }
 
-    public void setComposizioni(List<ComposizioneRicetta> composizioni) {
-        this.composizioni = composizioni;
+    public void setComposizioneRicetta(List<ComposizioneRicetta> composizioneRicetta) {
+        this.composizioneRicetta = composizioneRicetta;
     }
 
     public List<Multimedia> getMultimedia() {

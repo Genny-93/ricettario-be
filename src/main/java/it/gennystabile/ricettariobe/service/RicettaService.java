@@ -7,14 +7,8 @@ import it.gennystabile.ricettariobe.exception.DuplicateException;
 import it.gennystabile.ricettariobe.exception.ResourceNotFoundException;
 import it.gennystabile.ricettariobe.mapper.CategoriaRicettaMapper;
 import it.gennystabile.ricettariobe.mapper.RicettaMapper;
-import it.gennystabile.ricettariobe.model.CategoriaRicetta;
-import it.gennystabile.ricettariobe.model.Multimedia;
-import it.gennystabile.ricettariobe.model.Ricetta;
-import it.gennystabile.ricettariobe.model.User;
-import it.gennystabile.ricettariobe.repository.CategoriaRicettaRepository;
-import it.gennystabile.ricettariobe.repository.MultimediaRepository;
-import it.gennystabile.ricettariobe.repository.RicettaRepository;
-import it.gennystabile.ricettariobe.repository.UserRepository;
+import it.gennystabile.ricettariobe.model.*;
+import it.gennystabile.ricettariobe.repository.*;
 import it.gennystabile.ricettariobe.utils.CollectionUtils;
 import it.gennystabile.ricettariobe.utils.enumeration.TipoFile;
 import jakarta.transaction.Transactional;
@@ -35,14 +29,18 @@ public class RicettaService {
     private final MultimediaRepository multimediaRepository;
     private final CategoriaRicettaRepository categoriaRicettaRepository;
     private final CategoriaRicettaMapper categoriaRicettaMapper;
+    private final IngredienteService ingredienteService;
+    private final ComposizioneRicettaRepository composizioneRicettaRepository;
 
-    public RicettaService(RicettaRepository ricettaRepository, UserRepository userRepository, RicettaMapper ricettaMapper, MultimediaRepository multimediaRepository, CategoriaRicettaRepository categoriaRicettaRepository, CategoriaRicettaMapper categoriaRicettaMapper) {
+    public RicettaService(RicettaRepository ricettaRepository, UserRepository userRepository, RicettaMapper ricettaMapper, MultimediaRepository multimediaRepository, CategoriaRicettaRepository categoriaRicettaRepository, CategoriaRicettaMapper categoriaRicettaMapper, IngredienteService ingredienteService, ComposizioneRicettaRepository composizioneRicettaRepository) {
         this.ricettaRepository = ricettaRepository;
         this.userRepository = userRepository;
         this.ricettaMapper = ricettaMapper;
         this.multimediaRepository = multimediaRepository;
         this.categoriaRicettaRepository = categoriaRicettaRepository;
         this.categoriaRicettaMapper = categoriaRicettaMapper;
+        this.ingredienteService = ingredienteService;
+        this.composizioneRicettaRepository = composizioneRicettaRepository;
     }
 
 
@@ -87,8 +85,8 @@ public class RicettaService {
             ricetta.setCategorie(listaCategorieRicetta);
         }
 
-        //Salvo l'entity
-        ricetta = ricettaRepository.save(ricetta);
+        //Salvo l'entity per avere id
+
 
 
         //setto i multimedia collegati alla ricetta, se la lista non è vuota
@@ -97,7 +95,24 @@ public class RicettaService {
         }
 
 
-        //SETTARE CATEGORIA RICETTA
+        //setto la composizione della ricetta
+        List<ComposizioneRicetta> composizioneRicetta = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(ricettaInputDto.getComposizioneRicetta())) {
+            Ricetta finalRicetta = ricetta;
+            composizioneRicetta = ricettaInputDto.getComposizioneRicetta().stream().map(elemento -> {
+                Ingrediente ingrediente = ingredienteService.findIngredienteByNome(elemento.getIngrediente());
+                ComposizioneRicetta ingredienteSingolo = new ComposizioneRicetta();
+                ingredienteSingolo.setIngrediente(ingrediente);
+                ingredienteSingolo.setQuantita(elemento.getQuantita());
+                ingredienteSingolo.setUnitaDiMisura(elemento.getUnitaDiMisura());
+                ingredienteSingolo.setRicetta(finalRicetta);
+                return ingredienteSingolo;
+            }).toList();
+        }
+
+        ricetta.setComposizioneRicetta(composizioneRicetta);
+
+        ricetta = ricettaRepository.save(ricetta);
         return ricettaMapper.toOutputDto(ricetta);
     }
 
@@ -138,7 +153,6 @@ public class RicettaService {
             multimedia.setFormato(url.substring(index + 1));
             multimedia.setTipoFile(TipoFile.fromExtensions(multimedia.getFormato()));
         });
-        multimediaRepository.saveAll(listaMultimedia);
     }
 
 

@@ -56,9 +56,13 @@ public class IngredienteService {
 
     public IngredienteOutputDto getIngredienteByNome(String name) {
 
-        Ingrediente ingrediente = ingredienteRepository.findByNome(name).orElseThrow(() -> new ResourceNotFoundException("Ingrediente non trovato"));
+        Ingrediente ingrediente = findIngredienteByNome(name);
 
         return ingredienteMapper.toOutputDto(ingrediente);
+    }
+
+    public Ingrediente findIngredienteByNome(String name) {
+        return ingredienteRepository.findByNome(name).orElseThrow(() -> new ResourceNotFoundException("Ingrediente non trovato"));
     }
 
     @Transactional
