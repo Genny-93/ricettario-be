@@ -88,7 +88,6 @@ public class RicettaService {
         //Salvo l'entity per avere id
 
 
-
         //setto i multimedia collegati alla ricetta, se la lista non è vuota
         if (CollectionUtils.isNotEmpty(ricetta.getMultimedia())) {
             setMultimedia(ricetta.getMultimedia(), ricetta);
@@ -123,6 +122,13 @@ public class RicettaService {
         categoriaRicetta.setNomeCategoria(nomeCategoria);
 
         return categoriaRicettaMapper.toCategoriaOutputDto(categoriaRicettaRepository.save(categoriaRicetta));
+    }
+
+    @Transactional
+    public RicettaOutputDto deleteByNome(String titolo) {
+        Ricetta ricetta = ricettaRepository.findByTitolo(titolo).orElseThrow(() -> new ResourceNotFoundException("Risorsa non trovata"));
+        ricettaRepository.deleteById(ricetta.getId());
+        return ricettaMapper.toOutputDto(ricetta);
     }
 
     //Metodi di Utility

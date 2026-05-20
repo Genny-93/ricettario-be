@@ -66,7 +66,7 @@ public class GlobalExceptionHandler {
                 "Internal Server Error",
                 ex.getMessage()
         );
-        log.warn("Errore intercettato:{} ", ex);
+        log.error("Errore intercettato:{} ", ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
     }
 

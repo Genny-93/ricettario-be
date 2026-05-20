@@ -8,6 +8,7 @@ import it.gennystabile.ricettariobe.service.RicettaService;
 import it.gennystabile.ricettariobe.utils.constant.SecurityConstants;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -50,8 +51,14 @@ public class RicettaController {
 
     @PostMapping()
     public ResponseEntity<RicettaOutputDto> postRicetta(
-            @Valid @RequestBody RicettaInputDto ricettaInputDto) throws Exception {
+            @Valid @RequestBody RicettaInputDto ricettaInputDto) {
         return ResponseEntity.ok(ricettaService.postRicetta(ricettaInputDto));
+    }
+
+    @DeleteMapping
+    @PreAuthorize(SecurityConstants.ADMIN)
+    public ResponseEntity<RicettaOutputDto> deleteRicettaByTitolo(@NotBlank @RequestParam String titolo) {
+        return ResponseEntity.ok(ricettaService.deleteByNome(titolo));
     }
 
     @PostMapping(REQUEST_MAPPING_CATEGORIE_RICETTE)
