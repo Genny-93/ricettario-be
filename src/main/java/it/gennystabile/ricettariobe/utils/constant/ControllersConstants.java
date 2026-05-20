@@ -1,7 +1,6 @@
 package it.gennystabile.ricettariobe.utils.constant;
 
 
-
 public class ControllersConstants {
 
     // MAPPING
@@ -12,6 +11,7 @@ public class ControllersConstants {
     public static final String REQUEST_MAPPING_INGREDIENTI = "/ingredients";
     public static final String REQUEST_MAPPING_CATEGORIE_RICETTE = "/categories";
     public static final String REQUEST_MAPPING_CATEGORIE_INGREDIENTI = "/categories";
+    public static final String REQUEST_MAPPING_STAGIONI = "/seasons";
 
     //Costanti ROLES
 

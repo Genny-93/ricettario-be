@@ -5,17 +5,20 @@ import it.gennystabile.ricettariobe.dto.ingrediente.IngredienteInputDto;
 import it.gennystabile.ricettariobe.dto.ingrediente.IngredienteOutputDto;
 import it.gennystabile.ricettariobe.dto.ingrediente.categoria.CategoriaIngredienteInputDto;
 import it.gennystabile.ricettariobe.dto.ingrediente.categoria.CategoriaIngredienteOutputDto;
+import it.gennystabile.ricettariobe.dto.ingrediente.stagione.StagioneOutputDto;
 import it.gennystabile.ricettariobe.exception.BadRequestException;
 import it.gennystabile.ricettariobe.exception.DuplicateException;
 import it.gennystabile.ricettariobe.exception.ResourceNotFoundException;
 import it.gennystabile.ricettariobe.mapper.CategoriaIngredienteMapper;
 import it.gennystabile.ricettariobe.mapper.IngredienteMapper;
+import it.gennystabile.ricettariobe.mapper.StagioneMapper;
 import it.gennystabile.ricettariobe.model.CategoriaIngrediente;
 import it.gennystabile.ricettariobe.model.Ingrediente;
 import it.gennystabile.ricettariobe.model.Stagione;
 import it.gennystabile.ricettariobe.model.User;
 import it.gennystabile.ricettariobe.repository.CategoriaIngredienteRepository;
 import it.gennystabile.ricettariobe.repository.IngredienteRepository;
+import it.gennystabile.ricettariobe.repository.StagioneRepository;
 import it.gennystabile.ricettariobe.repository.UserRepository;
 import it.gennystabile.ricettariobe.utils.constant.ServiceConstants;
 import it.gennystabile.ricettariobe.utils.enumeration.Colore;
@@ -35,14 +38,17 @@ public class IngredienteService {
     private final UserRepository userRepository;
     private final CategoriaIngredienteRepository categoriaIngredienteRepository;
     private final CategoriaIngredienteMapper categoriaIngredienteMapper;
+    private final StagioneRepository stagioneRepository;
+    private final StagioneMapper stagioneMapper;
 
-
-    public IngredienteService(IngredienteRepository ingredienteRepository, IngredienteMapper ingredienteMapper, UserRepository userRepository, CategoriaIngredienteRepository categoriaIngredienteRepository, CategoriaIngredienteMapper categoriaIngredienteMapper) {
+    public IngredienteService(IngredienteRepository ingredienteRepository, IngredienteMapper ingredienteMapper, UserRepository userRepository, CategoriaIngredienteRepository categoriaIngredienteRepository, CategoriaIngredienteMapper categoriaIngredienteMapper, StagioneRepository stagioneRepository, StagioneMapper stagioneMapper) {
         this.ingredienteRepository = ingredienteRepository;
         this.ingredienteMapper = ingredienteMapper;
         this.userRepository = userRepository;
         this.categoriaIngredienteRepository = categoriaIngredienteRepository;
         this.categoriaIngredienteMapper = categoriaIngredienteMapper;
+        this.stagioneRepository = stagioneRepository;
+        this.stagioneMapper = stagioneMapper;
     }
 
     public List<IngredienteOutputDto> getAllIngredienti() {
@@ -130,5 +136,13 @@ public class IngredienteService {
                     return categoriaIngredienteMapper.toOutputDto(categoriaIngrediente);
                 })
                 .toList();
+    }
+
+    public List<StagioneOutputDto> getAllStagioni() {
+
+        return stagioneRepository.findAll().stream()
+                .map(stagione -> stagioneMapper.toOutputDto(stagione))
+                .toList();
+
     }
 }

@@ -98,12 +98,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<GenericErrorResponse> handleValidationException(MethodArgumentNotValidException ex) {
 
+        // Ottiene il risultato del binding che contiene i dettagli degli errori
         List<String> errors = ex.getBindingResult()
+                //Estrae l'elenco specifico di tutti i campi che hanno fallito la validazione
                 .getFieldErrors()
+                //Apre uno stream per elaborare la collezione di errori
                 .stream()
+                // Mappa ogni oggetto errore in una stringa formattata come "nomeCampo: messaggio di errore"
                 .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                // Colleziona i risultati trasformandoli in una lista immutabile
                 .toList();
 
+        // Concatena tutti gli elementi della lista 'errors' in un'unica stringa, separandoli con una virgola e uno spazio
         String dettaglioErrori = String.join(", ", errors);
 
         GenericErrorResponse error = new GenericErrorResponse(
@@ -119,13 +125,17 @@ public class GlobalExceptionHandler {
     // Gestione errori di @PathVariable e @RequestParam (@Validated)
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<GenericErrorResponse> handleConstraintViolationException(ConstraintViolationException ex) {
+        // Estrae l'insieme (Set) di tutte le violazioni rilevate sui parametri
         List<String> errors = ex.getConstraintViolations()
+                // Apre uno stream per elaborare le violazioni
                 .stream()
+                //mappa ogni singola violazione
                 .map(violation -> {
-                    String paramName = "";
-                    for (Path.Node node : violation.getPropertyPath()) {
-                        paramName = node.getName();
-                    }
+                    // Trasforma il path in stringa (es. "deleteIngredient.nome")
+                    String pathStr = violation.getPropertyPath().toString();
+                    // Prende solo la parte dopo l'ultimo punto
+                    String paramName = pathStr.substring(pathStr.lastIndexOf('.') + 1);
+                    // Restituisce la stringa formattata unendo il nome del parametro URL al relativo messaggio di errore (es. "id: deve essere maggiore di 0")
                     return paramName + ": " + violation.getMessage();
                 })
                 .toList();

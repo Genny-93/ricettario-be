@@ -7,5 +7,6 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface StagioneMapper {
 
+
     StagioneOutputDto toOutputDto(Stagione stagione);
 }

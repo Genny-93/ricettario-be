@@ -4,6 +4,7 @@ import it.gennystabile.ricettariobe.dto.ingrediente.IngredienteInputDto;
 import it.gennystabile.ricettariobe.dto.ingrediente.IngredienteOutputDto;
 import it.gennystabile.ricettariobe.dto.ingrediente.categoria.CategoriaIngredienteInputDto;
 import it.gennystabile.ricettariobe.dto.ingrediente.categoria.CategoriaIngredienteOutputDto;
+import it.gennystabile.ricettariobe.dto.ingrediente.stagione.StagioneOutputDto;
 import it.gennystabile.ricettariobe.service.IngredienteService;
 import it.gennystabile.ricettariobe.utils.constant.ControllersConstants;
 import it.gennystabile.ricettariobe.utils.constant.SecurityConstants;
@@ -64,6 +65,11 @@ public class IngredienteController {
     @GetMapping(ControllersConstants.REQUEST_MAPPING_CATEGORIE_INGREDIENTI)
     public ResponseEntity<List<CategoriaIngredienteOutputDto>> getAllCategorieIngrediente() {
         return ResponseEntity.ok(ingredienteService.getAllCategoriaIngrediente());
+    }
+
+    @GetMapping(ControllersConstants.REQUEST_MAPPING_STAGIONI)
+    public ResponseEntity<List<StagioneOutputDto>> getAllStagioni(){
+        return ResponseEntity.ok(ingredienteService.getAllStagioni());
     }
 
 }
