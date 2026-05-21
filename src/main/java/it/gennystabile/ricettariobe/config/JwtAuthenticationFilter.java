@@ -51,11 +51,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Si escludono i primi 7 caratteri corrispondenti a "Bearer "
         final String jwt = authHeader.substring(7);
         final String username;
+
         // 4. Estrazione dell'identificativo dell'utente (es. username) decodificando il token
         try {
-
             username = jwtService.extractUsername(jwt);
-
 
         } catch (Exception e) {
             // Se il token è scaduto o alterato, l'eccezione viene catturata.
