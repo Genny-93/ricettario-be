@@ -7,6 +7,8 @@ import it.gennystabile.ricettariobe.service.UserService;
 import it.gennystabile.ricettariobe.utils.constant.ControllersConstants;
 import it.gennystabile.ricettariobe.utils.enumeration.Role;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +53,11 @@ public class UserController {
     public ResponseEntity<String> modififyRole(@NotNull @RequestParam Long id,
                                                @RequestParam(required = true) Role role) {
         return ResponseEntity.ok(userService.modifyRole(id, role));
+    }
+
+    @PutMapping("/reset-password")
+    public ResponseEntity<String> modidifyPassword(@Valid @RequestBody UserInputDto inputDto){
+        return ResponseEntity.ok(userService.modifyPassword(inputDto));
     }
 
     @DeleteMapping

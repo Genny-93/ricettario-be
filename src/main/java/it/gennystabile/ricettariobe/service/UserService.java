@@ -74,6 +74,14 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Utente con id " + id + " non trovato"));
     }
 
+    public String modifyPassword(UserInputDto inputDto) {
+        User user = userRepository.findByUsernameAndEmail(inputDto.getUsername(), inputDto.getEmail()).orElseThrow(() -> new ResourceNotFoundException("Username o email non valide"));
+        user.setPassword(passwordEncoder.encode(inputDto.getPassword()));
+        userRepository.save(user);
+        return "Password cambiata correttamente";
+
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
