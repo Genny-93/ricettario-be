@@ -1,36 +1,38 @@
 package it.gennystabile.ricettariobe.controller.auth;
 
 
-import it.gennystabile.ricettariobe.dto.login.LoginRequest;
+import it.gennystabile.ricettariobe.dto.auth.LoginRequest;
+import it.gennystabile.ricettariobe.dto.auth.ResetPasswordRequest;
 import it.gennystabile.ricettariobe.service.JwtService;
+import it.gennystabile.ricettariobe.service.UserService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import static it.gennystabile.ricettariobe.utils.constant.ControllersConstants.REQUEST_MAPPING_AUTH;
 
 @RestController
 @RequestMapping(REQUEST_MAPPING_AUTH)
+@Validated
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final UserService userService;
 
 
-    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService) {
+    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService, UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.userService = userService;
     }
 
-    //TODO far restituire un oggetto
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequest request) {
 
@@ -48,5 +50,15 @@ public class AuthController {
         String jwtToken = jwtService.generateToken(userDetails);
 
         return ResponseEntity.ok(jwtToken);
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> generateTokenToResetPassword(@Email @RequestParam String email){
+        return ResponseEntity.ok(userService.generateTokenToResetPassword(email));
+    }
+
+    @PutMapping("/reset-password")
+    public ResponseEntity<String> resetPassword(@Valid ResetPasswordRequest request){
+        return ResponseEntity.ok(userService.resetPassword(request));
     }
 }

@@ -1,7 +1,6 @@
-package it.gennystabile.ricettariobe.dto.login;
+package it.gennystabile.ricettariobe.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
 
 public class LoginRequest {
 

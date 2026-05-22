@@ -11,9 +11,9 @@ import it.gennystabile.ricettariobe.model.*;
 import it.gennystabile.ricettariobe.repository.*;
 import it.gennystabile.ricettariobe.utils.CollectionUtils;
 import it.gennystabile.ricettariobe.utils.enumeration.TipoFile;
-import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class RicettaService {
 
     private final RicettaRepository ricettaRepository;
@@ -62,7 +63,6 @@ public class RicettaService {
     }
 
 
-    @Transactional
     public RicettaOutputDto postRicetta(RicettaInputDto ricettaInputDto) {
         Ricetta ricetta = ricettaMapper.toRicetta(ricettaInputDto);
 
@@ -124,7 +124,7 @@ public class RicettaService {
         return categoriaRicettaMapper.toCategoriaOutputDto(categoriaRicettaRepository.save(categoriaRicetta));
     }
 
-    @Transactional
+
     public RicettaOutputDto deleteByNome(String titolo) {
         Ricetta ricetta = ricettaRepository.findByTitolo(titolo).orElseThrow(() -> new ResourceNotFoundException("Risorsa non trovata"));
         ricettaRepository.deleteById(ricetta.getId());

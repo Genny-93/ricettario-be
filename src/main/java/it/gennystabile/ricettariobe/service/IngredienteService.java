@@ -22,15 +22,16 @@ import it.gennystabile.ricettariobe.repository.StagioneRepository;
 import it.gennystabile.ricettariobe.repository.UserRepository;
 import it.gennystabile.ricettariobe.utils.constant.ServiceConstants;
 import it.gennystabile.ricettariobe.utils.enumeration.Colore;
-import jakarta.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class IngredienteService {
 
     private final IngredienteRepository ingredienteRepository;
@@ -71,7 +72,6 @@ public class IngredienteService {
         return ingredienteRepository.findByNome(name).orElseThrow(() -> new ResourceNotFoundException("Ingrediente non trovato"));
     }
 
-    @Transactional
     public IngredienteOutputDto postIngrediente(IngredienteInputDto inputDto, Colore colore) {
 
 

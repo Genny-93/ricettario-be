@@ -1,10 +1,14 @@
 package it.gennystabile.ricettariobe.service;
 
+import it.gennystabile.ricettariobe.dto.auth.ResetPasswordRequest;
 import it.gennystabile.ricettariobe.dto.user.UserInputDto;
 import it.gennystabile.ricettariobe.dto.user.UserOutputDto;
+import it.gennystabile.ricettariobe.exception.BadRequestException;
 import it.gennystabile.ricettariobe.exception.ResourceNotFoundException;
 import it.gennystabile.ricettariobe.mapper.UserMapper;
+import it.gennystabile.ricettariobe.model.PasswordResetToken;
 import it.gennystabile.ricettariobe.model.User;
+import it.gennystabile.ricettariobe.repository.PasswordResetTokenRepository;
 import it.gennystabile.ricettariobe.repository.UserRepository;
 import it.gennystabile.ricettariobe.utils.constant.ControllersConstants;
 import it.gennystabile.ricettariobe.utils.enumeration.Role;
@@ -13,23 +17,28 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
+@Transactional
 public class UserService implements UserDetailsService {
 
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, PasswordResetTokenRepository passwordResetTokenRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
     }
 
 
@@ -41,6 +50,33 @@ public class UserService implements UserDetailsService {
             listaUtenti.add(userMapper.toOutputDto(utente));
         });
         return listaUtenti;
+    }
+
+    public String generateTokenToResetPassword(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("L'email inserita non è stata trovata"));
+        String tokenTemporaneo = UUID.randomUUID().toString();
+
+        PasswordResetToken resetToken = new PasswordResetToken();
+        resetToken.setToken(tokenTemporaneo);
+        resetToken.setUser(user);
+        resetToken.setExpiryDate(LocalDateTime.now().plusMinutes(10));
+        passwordResetTokenRepository.save(resetToken);
+        return ("http://localhost:3000/reset-password?token=" + tokenTemporaneo);
+    }
+
+    @Transactional(noRollbackFor = BadRequestException.class)
+    public String resetPassword(ResetPasswordRequest request) {
+        PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(request.getToken()).orElseThrow(() -> new ResourceNotFoundException("Token non valido"));
+
+        if (passwordResetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            passwordResetTokenRepository.delete(passwordResetToken);
+            throw new BadRequestException("Token scaduto per il reset della password!");
+        }
+        User user = passwordResetToken.getUser();
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
+        passwordResetTokenRepository.delete(passwordResetToken);
+        return "Password modificata con successo!";
     }
 
     public UserOutputDto getById(Long id) {
@@ -62,7 +98,6 @@ public class UserService implements UserDetailsService {
         return userMapper.toOutputDto(user);
     }
 
-
     public String modifyRole(Long id, Role role) {
         User user = getUser(id);
         user.setRole(role.toString());
@@ -79,7 +114,6 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(inputDto.getPassword()));
         userRepository.save(user);
         return "Password cambiata correttamente";
-
     }
 
     @Override
