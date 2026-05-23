@@ -31,7 +31,7 @@ public class SecurityConfig {
     // di login standard all'interno dell'AuthController.
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
-            throws Exception {
+            {
         return config.getAuthenticationManager();
     }
 
@@ -50,7 +50,7 @@ public class SecurityConfig {
 
     // Metodo centrale per definire la catena dei filtri HTTP e le regole di accesso
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, DaoAuthenticationProvider authProvider) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, DaoAuthenticationProvider authProvider) {
         http
                 .csrf(csrf -> csrf.disable()) //Disabilito la protezione CSRF per far funzionare le chiamate POST, PUT, DELETE nelle API REST.
                 //Imposto l'applicativo come Stateless (Senza stato)-> ogni chiamata dovrà avere il suo Token".

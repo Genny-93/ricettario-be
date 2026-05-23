@@ -1,6 +1,8 @@
 package it.gennystabile.ricettariobe.controller.ricette;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import it.gennystabile.ricettariobe.dto.ricetta.RicettaInputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.RicettaOutputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.categoria.CategoriaOutputDto;
@@ -8,7 +10,6 @@ import it.gennystabile.ricettariobe.service.RicettaService;
 import it.gennystabile.ricettariobe.utils.constant.SecurityConstants;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -23,6 +24,7 @@ import static it.gennystabile.ricettariobe.utils.constant.ControllersConstants.R
 @RequestMapping(REQUEST_MAPPING_RICETTE)
 @PreAuthorize(SecurityConstants.ALL_PROFILES)
 @Validated
+@Tag(name = "Ricette", description = "Endpoint per la consultazione, la creazione e la rimozione delle ricette e delle loro categorie")
 public class RicettaController {
 
     private final RicettaService ricettaService;
@@ -31,39 +33,63 @@ public class RicettaController {
         this.ricettaService = ricettaService;
     }
 
-
+    @Operation(
+            summary = "Recupera tutte le ricette",
+            description = "Restituisce l'elenco completo di tutte le ricette disponibili nel sistema."
+    )
     @GetMapping()
     public ResponseEntity<List<RicettaOutputDto>> getAllRicette() {
         return ResponseEntity.ok(ricettaService.getAllRicette());
     }
 
+    @Operation(
+            summary = "Recupera una ricetta tramite ID",
+            description = "Effettua la ricerca di una specifica ricetta utilizzando l'identificativo numerico fornito nell'URL. Restituisce uno stato 204 (No Content) se la risorsa non viene trovata."
+    )
     @GetMapping("{id}")
     public ResponseEntity<RicettaOutputDto> getRicettaById(@PathVariable Long id) {
         RicettaOutputDto ricetta = ricettaService.getRicettaById(id);
         return (ricetta == null) ? ResponseEntity.noContent().build() : ResponseEntity.ok(ricetta);
     }
 
+    @Operation(
+            summary = "Recupera una ricetta tramite titolo",
+            description = "Effettua la ricerca di una singola ricetta basandosi sul titolo testuale inserito nell'URL. Restituisce uno stato 204 (No Content) in assenza di corrispondenze."
+    )
     @GetMapping("/title/{title}")
     public ResponseEntity<RicettaOutputDto> getRicettaByTitolo(@NotBlank @PathVariable String title) {
         RicettaOutputDto ricetta = ricettaService.getRicettaByTitolo(title);
         return (ricetta == null) ? ResponseEntity.noContent().build() : ResponseEntity.ok(ricetta);
     }
 
+    @Operation(
+            summary = "Crea una nuova ricetta",
+            description = "Inserisce una nuova ricetta nel sistema prendendo i dati strutturati dal corpo della richiesta."
+    )
     @PostMapping()
     public ResponseEntity<RicettaOutputDto> postRicetta(
             @Valid @RequestBody RicettaInputDto ricettaInputDto) {
         return ResponseEntity.ok(ricettaService.postRicetta(ricettaInputDto));
     }
 
+    @Operation(
+            summary = "Crea una nuova categoria per le ricette",
+            description = "Aggiunge una categoria di classificazione per le ricette tramite il nome passato come parametro della richiesta. Endpoint riservato agli amministratori."
+    )
+    @PostMapping(REQUEST_MAPPING_CATEGORIE_RICETTE)
+    @PreAuthorize(SecurityConstants.ADMIN)
+    public ResponseEntity<CategoriaOutputDto> postCategoriaRicetta(@NotBlank @RequestParam String nomeCategoria) {
+        return ResponseEntity.ok(ricettaService.postCategoria(nomeCategoria));
+    }
+
+    @Operation(
+            summary = "Elimina una ricetta tramite titolo",
+            description = "Rimuove in modo definitivo una ricetta dal database identificandola mediante il titolo fornito nei parametri di query. Endpoint riservato agli amministratori."
+    )
     @DeleteMapping
     @PreAuthorize(SecurityConstants.ADMIN)
     public ResponseEntity<RicettaOutputDto> deleteRicettaByTitolo(@NotBlank @RequestParam String titolo) {
         return ResponseEntity.ok(ricettaService.deleteByNome(titolo));
     }
 
-    @PostMapping(REQUEST_MAPPING_CATEGORIE_RICETTE)
-    @PreAuthorize(SecurityConstants.ADMIN)
-    public ResponseEntity<CategoriaOutputDto> postCategoriaRicetta(@NotBlank @RequestParam String nomeCategoria) {
-        return ResponseEntity.ok(ricettaService.postCategoria(nomeCategoria));
-    }
 }

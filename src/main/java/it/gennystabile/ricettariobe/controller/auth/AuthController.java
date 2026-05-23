@@ -1,6 +1,8 @@
 package it.gennystabile.ricettariobe.controller.auth;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import it.gennystabile.ricettariobe.dto.auth.LoginRequest;
 import it.gennystabile.ricettariobe.dto.auth.ResetPasswordRequest;
 import it.gennystabile.ricettariobe.service.JwtService;
@@ -19,6 +21,7 @@ import static it.gennystabile.ricettariobe.utils.constant.ControllersConstants.R
 
 @RestController
 @RequestMapping(REQUEST_MAPPING_AUTH)
+@Tag(name = "Autenticazione - AuthController", description = "Endpoint dedicati alla gestione dell'accesso e al recupero delle credenziali")
 @Validated
 public class AuthController {
 
@@ -33,6 +36,10 @@ public class AuthController {
         this.userService = userService;
     }
 
+    @Operation(
+            summary = "Esegue il login dell'utente",
+            description = "Verifica le credenziali fornite nel corpo della richiesta. Se l'autenticazione ha esito positivo, restituisce un token JWT valido."
+    )
     @PostMapping("/login")
     public ResponseEntity<String> login(@Valid @RequestBody LoginRequest request) {
 
@@ -52,13 +59,21 @@ public class AuthController {
         return ResponseEntity.ok(jwtToken);
     }
 
+    @Operation(
+            summary = "Richiede il ripristino della password",
+            description = "Genera un token univoco di reset associato all'indirizzo email fornito, da utilizzare per la successiva modifica della password."
+    )
     @PostMapping("/forgot-password")
-    public ResponseEntity<String> generateTokenToResetPassword(@Email @RequestParam String email){
+    public ResponseEntity<String> generateTokenToResetPassword(@Email @RequestParam String email) {
         return ResponseEntity.ok(userService.generateTokenToResetPassword(email));
     }
 
+    @Operation(
+            summary = "Effettua il reset della password",
+            description = "Aggiorna la password dell'utente nel sistema utilizzando il token di ripristino precedentemente generato per verificarne l'identità."
+    )
     @PutMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@Valid ResetPasswordRequest request){
+    public ResponseEntity<String> resetPassword(@Valid ResetPasswordRequest request) {
         return ResponseEntity.ok(userService.resetPassword(request));
     }
 }
