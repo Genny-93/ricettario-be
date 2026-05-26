@@ -50,11 +50,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 3. Estrazione della stringa JWT pura
         // Si escludono i primi 7 caratteri corrispondenti a "Bearer "
         final String jwt = authHeader.substring(7);
+        final Claims claims;
         final String username;
 
         // 4. Estrazione dell'identificativo dell'utente (es. username) decodificando il token
         try {
-            username = jwtService.extractUsername(jwt);
+            claims = jwtService.extractAllClaims(jwt);
+            username = claims.getSubject();
 
         } catch (Exception e) {
             // Se il token è scaduto o alterato, l'eccezione viene catturata.
@@ -66,39 +68,35 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // non sia già stata autenticata precedentemente nel contesto corrente
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
+            // Estrae la lista dei ruoli memorizzata all'interno dei claims del JWT durante la fase di login
+            List<String> roles = claims.get("roles", List.class);
 
-            // 6. Verifica aggiuntiva per assicurarsi che il token non sia scaduto
-            if (jwtService.isTokenValid(jwt)) {
+            // Converte le stringhe testuali in oggetti SimpleGrantedAuthority riconosciuti da Spring Security
+            List<SimpleGrantedAuthority> authorities = roles.stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .toList();
+            // Crea un oggetto User (implementazione di UserDetails) in memoria, contenente nome e ruoli.
+            // La password è vuota in quanto l'identità è già certificata dal token stesso.
+            UserDetails principal = new User(username, "", authorities);
 
-                // Estrae la lista dei ruoli memorizzata all'interno dei claims del JWT durante la fase di login
-                List<String> roles = jwtService.extractClaim(jwt, claims -> claims.get("roles", List.class));
+            // 7. Creazione dell'oggetto Authentication ufficiale riconosciuto da Spring Security
+            // I parametri richiesti sono: l'utente (principal), le credenziali (qui null poiché gestite dal token)
+            // e la lista dei ruoli/permessi dell'utente
+            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                    principal,
+                    null,
+                    authorities
+            );
 
-                // Converte le stringhe testuali in oggetti SimpleGrantedAuthority riconosciuti da Spring Security
-                List<SimpleGrantedAuthority> authorities = roles.stream()
-                        .map(SimpleGrantedAuthority::new)
-                        .toList();
-                // Crea un oggetto User (implementazione di UserDetails) in memoria, contenente nome e ruoli.
-                // La password è vuota in quanto l'identità è già certificata dal token stesso.
-                UserDetails principal = new User(username, "", authorities);
+            // Vengono allegati ulteriori dettagli tecnici alla richiesta (es. indirizzo IP del client, session ID)
+            authToken.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request)
+            );
 
-                // 7. Creazione dell'oggetto Authentication ufficiale riconosciuto da Spring Security
-                // I parametri richiesti sono: l'utente (principal), le credenziali (qui null poiché gestite dal token)
-                // e la lista dei ruoli/permessi dell'utente
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        principal,
-                        null,
-                        authorities
-                );
+            // 8. Registrazione dell'autenticazione nel contesto di sicurezza
+            // Da questo momento esatto, l'utente è considerato autenticato per l'intero ciclo di vita della richiesta
+            SecurityContextHolder.getContext().setAuthentication(authToken);
 
-                // Vengono allegati ulteriori dettagli tecnici alla richiesta (es. indirizzo IP del client, session ID)
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource().buildDetails(request)
-                );
-
-                // 8. Registrazione dell'autenticazione nel contesto di sicurezza
-                // Da questo momento esatto, l'utente è considerato autenticato per l'intero ciclo di vita della richiesta
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-            }
         }
 
         // 9. Conclusione delle operazioni del filtro e prosecuzione lungo la catena di Spring Security

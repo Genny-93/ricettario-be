@@ -110,7 +110,7 @@ public class JwtService {
     }
 
     // Metodo interno per smontare il token
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         inizializzazione(); // Si assicura che il lettore sia configurato prima di leggere il token
         // Prende il lettore riutilizzabile salvato in memoria
         return jwtParser
