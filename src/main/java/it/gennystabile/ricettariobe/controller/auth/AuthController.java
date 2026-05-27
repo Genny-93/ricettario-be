@@ -9,6 +9,8 @@ import it.gennystabile.ricettariobe.service.JwtService;
 import it.gennystabile.ricettariobe.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -41,7 +43,7 @@ public class AuthController {
             description = "Verifica le credenziali fornite nel corpo della richiesta. Se l'autenticazione ha esito positivo, restituisce un token JWT valido."
     )
     @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
 
         // L'AuthenticationManager riceve username e password.
         // Se le credenziali sono corrette, l'autenticazione va a buon fine, recuperando automaticamente l'utente dal database.
@@ -56,7 +58,17 @@ public class AuthController {
         // Viene richiamato il JwtService per generare la stringa del token, passando i dettagli completi.
         String jwtToken = jwtService.generateToken(userDetails);
 
-        return ResponseEntity.ok(jwtToken);
+        ResponseCookie springCookie = ResponseCookie.from("auth_token", jwtToken)
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(24 * 60 * 60)
+                .sameSite("Strict")
+                .build();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, springCookie.toString())
+                .body("Autenticazione completata con successo");
     }
 
     @Operation(

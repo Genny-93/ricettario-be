@@ -14,6 +14,11 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -52,6 +57,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, DaoAuthenticationProvider authProvider) {
         http
+                //Abilitazione della configurazione CORS personalizzata
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable()) //Disabilito la protezione CSRF per far funzionare le chiamate POST, PUT, DELETE nelle API REST.
                 //Imposto l'applicativo come Stateless (Senza stato)-> ogni chiamata dovrà avere il suo Token".
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -74,5 +81,28 @@ public class SecurityConfig {
                 // INSERIMENTO CRITICO: Esegue il filtro JWT prima di quello standard per login via form
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // Consente le richieste provenienti dall'applicazione Angular
+        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+
+        // Consente i metodi HTTP necessari
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+
+        // Consente gli header standard e l'header Authorization per il token JWT
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "Accept"));
+
+        // Permette l'invio di credenziali se necessario (inclusi i cookie HttpOnly)
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        // Applica le regole a tutti i percorsi dell'applicazione
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
 }
