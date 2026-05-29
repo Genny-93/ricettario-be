@@ -85,7 +85,20 @@ public class AuthController {
             description = "Aggiorna la password dell'utente nel sistema utilizzando il token di ripristino precedentemente generato per verificarne l'identità."
     )
     @PutMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@Valid ResetPasswordRequest request) {
+    public ResponseEntity<String> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         return ResponseEntity.ok(userService.resetPassword(request));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout() {
+        ResponseCookie responseCookie = ResponseCookie.from("auth_token", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Strict")
+                .build();
+
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString()).body("Logout effettuato");
     }
 }
