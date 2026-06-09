@@ -3,6 +3,7 @@ package it.gennystabile.ricettariobe.controller.ricette;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import it.gennystabile.ricettariobe.dto.ricetta.RicettaCardOutputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.RicettaInputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.RicettaOutputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.categoria.CategoriaOutputDto;
@@ -40,6 +41,11 @@ public class RicettaController {
     @GetMapping()
     public ResponseEntity<List<RicettaOutputDto>> getAllRicette() {
         return ResponseEntity.ok(ricettaService.getAllRicette());
+    }
+
+    @GetMapping("/recipe-cards")
+    public ResponseEntity<List<RicettaCardOutputDto>> getAllRicetteCards(){
+        return ResponseEntity.ok(ricettaService.getAllRicetteCards());
     }
 
     @Operation(

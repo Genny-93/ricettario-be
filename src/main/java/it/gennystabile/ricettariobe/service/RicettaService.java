@@ -1,5 +1,6 @@
 package it.gennystabile.ricettariobe.service;
 
+import it.gennystabile.ricettariobe.dto.ricetta.RicettaCardOutputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.RicettaInputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.RicettaOutputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.categoria.CategoriaOutputDto;
@@ -52,6 +53,14 @@ public class RicettaService {
                 .toList());
     }
 
+    public List<RicettaCardOutputDto> getAllRicetteCards() {
+        return ricettaRepository.findAllRecipesForCards().stream()
+                .map(ricetta -> {
+                    return ricettaMapper.toOutputCardDto(ricetta);
+                })
+                .toList();
+    }
+
     public RicettaOutputDto getRicettaById(Long id) {
         Ricetta ricetta = findRicettaById(id);
         return ricettaMapper.toOutputDto(ricetta);
@@ -61,7 +70,6 @@ public class RicettaService {
     public RicettaOutputDto getRicettaByTitolo(String titolo) {
         return ricettaMapper.toOutputDto(findRicettaByTitle(titolo));
     }
-
 
     public RicettaOutputDto postRicetta(RicettaInputDto ricettaInputDto) {
         Ricetta ricetta = ricettaMapper.toRicetta(ricettaInputDto);

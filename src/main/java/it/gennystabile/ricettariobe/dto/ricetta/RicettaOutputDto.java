@@ -3,7 +3,6 @@ package it.gennystabile.ricettariobe.dto.ricetta;
 import it.gennystabile.ricettariobe.dto.multimedia.MultimediaOutputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.categoria.CategoriaOutputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.composizionericetta.ComposizioneRicettaOutputDto;
-import jakarta.persistence.Column;
 
 import java.util.List;
 
