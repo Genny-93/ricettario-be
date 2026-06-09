@@ -28,6 +28,15 @@ public class Ricetta {
     @Column(name = "desc_breve")
     private String descBreve;
 
+    @Column(name = "voti_totali")
+    private Integer votiTotali;
+
+    @Column(name = "valutazione_media")
+    private Float valutazioneMedia;
+
+    @Column(name = "url_immagine_principale")
+    private String imgPrincipale;
+
     @ManyToMany
     @JoinTable(
             name = "ricette_categorie",
@@ -60,8 +69,32 @@ public class Ricetta {
         return composizioneRicetta;
     }
 
+    public String getImgPrincipale() {
+        return imgPrincipale;
+    }
+
+    public void setImgPrincipale(String imgPrincipale) {
+        this.imgPrincipale = imgPrincipale;
+    }
+
     public void setComposizioneRicetta(List<ComposizioneRicetta> composizioneRicetta) {
         this.composizioneRicetta = composizioneRicetta;
+    }
+
+    public Integer getVotiTotali() {
+        return votiTotali;
+    }
+
+    public void setVotiTotali(Integer votiTotali) {
+        this.votiTotali = votiTotali;
+    }
+
+    public Float getValutazioneMedia() {
+        return valutazioneMedia;
+    }
+
+    public void setValutazioneMedia(Float valutazioneMedia) {
+        this.valutazioneMedia = valutazioneMedia;
     }
 
     public List<Multimedia> getMultimedia() {
