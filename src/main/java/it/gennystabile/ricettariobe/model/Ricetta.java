@@ -192,4 +192,14 @@ public class Ricetta {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public interface RicettaCardProjection {
+        Long getId();
+        String getTitolo();
+        Short getTempoDiPreparazione();
+        Float getDifficolta();
+        Integer getVotiTotali();
+        Float getValutazioneMedia();
+        String getImgPrincipale();
+    }
 }

@@ -4,7 +4,6 @@ import it.gennystabile.ricettariobe.dto.ricetta.RicettaCardOutputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.RicettaInputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.RicettaOutputDto;
 import it.gennystabile.ricettariobe.model.Ricetta;
-import it.gennystabile.ricettariobe.repository.RicettaRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -17,5 +16,5 @@ public interface RicettaMapper {
     Ricetta toRicetta(RicettaInputDto inputDto);
 
     //Uso Projection in JPA
-    RicettaCardOutputDto toOutputCardDto(RicettaRepository.RicettaCardProjection ricetta);
+    RicettaCardOutputDto toOutputCardDto(Ricetta.RicettaCardProjection ricetta);
 }

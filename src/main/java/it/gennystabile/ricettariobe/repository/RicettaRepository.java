@@ -21,17 +21,6 @@ public interface RicettaRepository extends JpaRepository<Ricetta, Long> {
             "r.valutazioneMedia AS valutazioneMedia, " +
             "r.imgPrincipale AS imgPrincipale " +
             "FROM Ricetta r")
-    List<RicettaCardProjection> findAllRecipesForCards();
+    List<Ricetta.RicettaCardProjection> findAllRecipesForCards();
 
-
-
-    interface RicettaCardProjection {
-        Long getId();
-        String getTitolo();
-        Short getTempoDiPreparazione();
-        Float getDifficolta();
-        Integer getVotiTotali();
-        Float getValutazioneMedia();
-        String getImgPrincipale();
-    }
 }
