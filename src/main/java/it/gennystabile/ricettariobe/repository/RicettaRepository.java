@@ -23,4 +23,6 @@ public interface RicettaRepository extends JpaRepository<Ricetta, Long> {
             "FROM Ricetta r")
     List<Ricetta.RicettaCardProjection> findAllRecipesForCards();
 
+    List<Ricetta.RicettaCardProjection> findByCategorie_NomeCategoriaIgnoreCase(String nomeCategoria);
+
 }

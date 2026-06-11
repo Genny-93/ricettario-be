@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface CategoriaRicettaRepository extends JpaRepository<CategoriaRicetta, Long> {
 
     boolean existsByNomeCategoriaIgnoreCase(String nomeCategoria);
-    Optional<CategoriaRicetta> findByNomeCategoria(String nomeCategoria);
+    Optional<CategoriaRicetta> findByNomeCategoriaIgnoreCase(String nomeCategoria);
 }

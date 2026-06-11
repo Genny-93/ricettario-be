@@ -11,6 +11,7 @@ import it.gennystabile.ricettariobe.service.RicettaService;
 import it.gennystabile.ricettariobe.utils.constant.SecurityConstants;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -43,14 +44,19 @@ public class RicettaController {
         return ResponseEntity.ok(ricettaService.getAllRicette());
     }
 
-    @GetMapping("/recipe-cards")
-    public ResponseEntity<List<RicettaCardOutputDto>> getAllRicetteCards(){
+    @GetMapping("/cards")
+    public ResponseEntity<List<RicettaCardOutputDto>> getAllRicetteCards() {
         return ResponseEntity.ok(ricettaService.getAllRicetteCards());
+    }
+
+    @GetMapping("/category/{categoryName}")
+    public ResponseEntity<List<RicettaCardOutputDto>> findRecipesByCategory(@NotBlank @PathVariable String categoryName) {
+        return ResponseEntity.ok(ricettaService.findRecipesByCategory(categoryName));
     }
 
     @Operation(
             summary = "Recupera una ricetta tramite ID",
-            description = "Effettua la ricerca di una specifica ricetta utilizzando l'identificativo numerico fornito nell'URL. Restituisce uno stato 204 (No Content) se la risorsa non viene trovata."
+            description = "Effettua la ricerca di una specifica ricetta utilizzando l'identificativo nu merico fornito nell'URL. Restituisce uno stato 204 (No Content) se la risorsa non viene trovata."
     )
     @GetMapping("{id}")
     public ResponseEntity<RicettaOutputDto> getRicettaById(@PathVariable Long id) {
@@ -86,6 +92,11 @@ public class RicettaController {
     @PreAuthorize(SecurityConstants.ADMIN)
     public ResponseEntity<CategoriaOutputDto> postCategoriaRicetta(@NotBlank @RequestParam String nomeCategoria) {
         return ResponseEntity.ok(ricettaService.postCategoria(nomeCategoria));
+    }
+
+    @PutMapping("/{id}/rating")
+    public ResponseEntity<Float> aggiornaValutazione(@PathVariable Long id, @NotNull @RequestParam Float voto) {
+        return ResponseEntity.ok(ricettaService.aggiornaValutazione(id, voto));
     }
 
     @Operation(

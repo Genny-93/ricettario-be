@@ -86,7 +86,7 @@ public class RicettaService {
         //setto la CategoriaRicetta
         List<CategoriaRicetta> listaCategorieRicetta = new ArrayList<>();
         ricettaInputDto.getCategorieRicetta().forEach(categoria -> {
-            Optional<CategoriaRicetta> categoriaRicetta = categoriaRicettaRepository.findByNomeCategoria(categoria);
+            Optional<CategoriaRicetta> categoriaRicetta = categoriaRicettaRepository.findByNomeCategoriaIgnoreCase(categoria);
             if (categoriaRicetta.isPresent()) listaCategorieRicetta.add(categoriaRicetta.get());
         });
         if (CollectionUtils.isNotEmpty(listaCategorieRicetta)) {
@@ -132,11 +132,34 @@ public class RicettaService {
         return categoriaRicettaMapper.toCategoriaOutputDto(categoriaRicettaRepository.save(categoriaRicetta));
     }
 
+    public List<RicettaCardOutputDto> findRecipesByCategory(String category) {
+        List<Ricetta.RicettaCardProjection> listaRicette = ricettaRepository.findByCategorie_NomeCategoriaIgnoreCase(category);
+        if (CollectionUtils.isEmpty(listaRicette)) throw new ResourceNotFoundException("Ricette non trovate");
+
+        return listaRicette.stream()
+                .map(ricetta -> {
+                    return ricettaMapper.toOutputCardDto(ricetta);
+                })
+                .toList();
+    }
 
     public RicettaOutputDto deleteByNome(String titolo) {
         Ricetta ricetta = ricettaRepository.findByTitolo(titolo).orElseThrow(() -> new ResourceNotFoundException("Risorsa non trovata"));
         ricettaRepository.deleteById(ricetta.getId());
         return ricettaMapper.toOutputDto(ricetta);
+    }
+
+    public Float aggiornaValutazione(Long id, Float voto) {
+        Ricetta ricetta = ricettaRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ricetta non trovata"));
+
+        int votiTotali = ricetta.getVotiTotali() + 1;
+        ricetta.setVotiTotali(votiTotali);
+        Float oldValutazioneMedia = ricetta.getValutazioneMedia();
+        Float newValutazioneMedia = oldValutazioneMedia + ((voto - oldValutazioneMedia) / votiTotali);
+        ricetta.setValutazioneMedia(newValutazioneMedia);
+        ricettaRepository.save(ricetta);
+        return newValutazioneMedia;
+
     }
 
     //Metodi di Utility

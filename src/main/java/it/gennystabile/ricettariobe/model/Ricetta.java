@@ -201,5 +201,6 @@ public class Ricetta {
         Integer getVotiTotali();
         Float getValutazioneMedia();
         String getImgPrincipale();
+        String getDescBreve();
     }
 }

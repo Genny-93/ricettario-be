@@ -8,6 +8,15 @@ public class RicettaCardOutputDto {
     private Integer votiTotali;
     private Float valutazioneMedia;
     private Short tempoDiPreparazione;
+    private String descBreve;
+
+    public String getDescBreve() {
+        return descBreve;
+    }
+
+    public void setDescBreve(String descBreve) {
+        this.descBreve = descBreve;
+    }
 
     public Float getDifficolta() {
         return difficolta;
