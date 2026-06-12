@@ -15,6 +15,13 @@ spring:
       hibernate:
         format_sql: true
         highlight_sql: true
+logging:
+  level:
+    org:
+      hibernate:
+        orm:
+          jdbc:
+            bind: TRACE
 jwt:
   secret: r0Q7XA4T4kmXgcEvHUlgka79Kj0E7o4/hPghvyK3l5I=
   expiration: 3600000

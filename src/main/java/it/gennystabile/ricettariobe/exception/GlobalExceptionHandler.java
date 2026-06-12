@@ -21,17 +21,17 @@ public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 
-    // Gestione 404 - Not Found
+    // Gestione 204 - No Content
     // Dichiara che questo metodo deve scattare SOLO quando viene lanciata una ResourceNotFoundException.
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<GenericErrorResponse> handleNotFound(ResourceNotFoundException ex) {
         GenericErrorResponse error = new GenericErrorResponse(
-                HttpStatus.NOT_FOUND.value(),
+                HttpStatus.NO_CONTENT.value(),
                 "Risorsa non trovata",
                 ex.getMessage()
         );
         log.warn("Errore intercettato: {}", ex);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(error);
     }
 
     // Gestione 400 Bad Request
