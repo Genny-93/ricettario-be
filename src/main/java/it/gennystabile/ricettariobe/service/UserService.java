@@ -4,6 +4,7 @@ import it.gennystabile.ricettariobe.dto.auth.ResetPasswordRequest;
 import it.gennystabile.ricettariobe.dto.user.UserInputDto;
 import it.gennystabile.ricettariobe.dto.user.UserOutputDto;
 import it.gennystabile.ricettariobe.exception.BadRequestException;
+import it.gennystabile.ricettariobe.exception.DuplicateException;
 import it.gennystabile.ricettariobe.exception.ResourceNotFoundException;
 import it.gennystabile.ricettariobe.mapper.UserMapper;
 import it.gennystabile.ricettariobe.model.PasswordResetToken;
@@ -61,11 +62,11 @@ public class UserService implements UserDetailsService {
         resetToken.setUser(user);
         resetToken.setExpiryDate(LocalDateTime.now().plusMinutes(10));
         passwordResetTokenRepository.save(resetToken);
-        return ("http://localhost:3000/reset-password?token=" + tokenTemporaneo);
+        return ("http://localhost:4200/reset-password?token=" + tokenTemporaneo);
     }
 
     @Transactional(noRollbackFor = BadRequestException.class)
-    public String resetPassword(ResetPasswordRequest request) {
+    public Boolean resetPassword(ResetPasswordRequest request) {
         PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(request.getToken()).orElseThrow(() -> new ResourceNotFoundException("Token non valido"));
 
         if (passwordResetToken.getExpiryDate().isBefore(LocalDateTime.now())) {
@@ -76,7 +77,7 @@ public class UserService implements UserDetailsService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
         passwordResetTokenRepository.delete(passwordResetToken);
-        return "Password modificata con successo!";
+        return true;
     }
 
     public UserOutputDto getById(Long id) {
@@ -85,6 +86,9 @@ public class UserService implements UserDetailsService {
 
     public UserOutputDto register(UserInputDto userInputDto) {
         User user = userMapper.toUtente(userInputDto);
+        if(userRepository.findByEmailOrUsername(userInputDto.getEmail(),userInputDto.getEmail()).isPresent()){
+            throw new DuplicateException("Email o Username inserite già presenti");
+        }
         user.setCreatedAt(LocalDateTime.now());
         user.setRole(ControllersConstants.USER);
         user.setPassword(passwordEncoder.encode(userInputDto.getPassword()));
@@ -109,12 +113,12 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Utente con id " + id + " non trovato"));
     }
 
-    public String modifyPassword(UserInputDto inputDto) {
+   /* public String modifyPassword(UserInputDto inputDto) {
         User user = userRepository.findByUsernameAndEmail(inputDto.getUsername(), inputDto.getEmail()).orElseThrow(() -> new ResourceNotFoundException("Username o email non valide"));
         user.setPassword(passwordEncoder.encode(inputDto.getPassword()));
         userRepository.save(user);
         return "Password cambiata correttamente";
-    }
+    }*/
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

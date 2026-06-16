@@ -10,7 +10,7 @@ public class ResetPasswordRequest {
 
     @Schema(description = "Password di accesso dell'utente", example = "Str0ngP@ssw0rd!")
     @Pattern(
-           regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!]).{8,}$",
+           regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&-])[A-Za-z\\d@$!%*?&-]{8,}$",
            message = "La password deve contenere almeno 8 caratteri, una lettera maiuscola, una minuscola, un numero e un carattere speciale"
    )
     private String newPassword;

@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.gennystabile.ricettariobe.dto.auth.LoginRequest;
 import it.gennystabile.ricettariobe.dto.auth.ResetPasswordRequest;
+import it.gennystabile.ricettariobe.dto.user.UserInputDto;
 import it.gennystabile.ricettariobe.service.JwtService;
 import it.gennystabile.ricettariobe.service.UserService;
 import jakarta.validation.Valid;
@@ -85,7 +86,7 @@ public class AuthController {
             description = "Aggiorna la password dell'utente nel sistema utilizzando il token di ripristino precedentemente generato per verificarne l'identità."
     )
     @PutMapping("/reset-password")
-    public ResponseEntity<String> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+    public ResponseEntity<Boolean> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
         return ResponseEntity.ok(userService.resetPassword(request));
     }
 
@@ -101,4 +102,14 @@ public class AuthController {
 
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, responseCookie.toString()).body("Logout effettuato");
     }
+
+    /*@Operation(
+            summary = "Modifica la password dell'utente",
+            description = "Aggiorna la credenziale di accesso del profilo utente elaborando i nuovi dati trasmessi nel corpo della richiesta."
+    )
+
+   @PutMapping("/modify-password")
+    public ResponseEntity<String> modifyPassword(@Valid @RequestBody UserInputDto inputDto) {
+        return ResponseEntity.ok(userService.modifyPassword(inputDto));
+    }*/
 }

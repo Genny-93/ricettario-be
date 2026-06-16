@@ -47,18 +47,19 @@ public class UserController {
             description = "Esegue la ricerca di uno specifico utente sulla base dell'identificativo numerico fornito nell'URL. In assenza di corrispondenze, restituisce uno stato 204 (No Content)."
     )
     @GetMapping("{id}")
-    public ResponseEntity<UserOutputDto> getById(@PathVariable Long id) {
+    public ResponseEntity<UserOutputDto> findById(@PathVariable Long id) {
         UserOutputDto userOutputDto = userService.getById(id);
         if (userOutputDto == null) return ResponseEntity.noContent().build();
 
         return ResponseEntity.ok(userOutputDto);
     }
 
+
     @Operation(
             summary = "Registra un nuovo utente",
             description = "Crea un nuovo profilo utente nel sistema elaborando le informazioni fornite nel corpo della richiesta. Restituisce uno stato HTTP 201 (Created) in caso di successo."
     )
-    @PostMapping
+    @PostMapping("/register")
     public ResponseEntity<UserOutputDto> register(@Valid @RequestBody UserInputDto userInputDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.register(userInputDto));
     }
@@ -68,18 +69,9 @@ public class UserController {
             description = "Aggiorna i permessi di accesso di un utente esistente assegnando il nuovo ruolo specificato tramite i parametri della richiesta."
     )
     @PutMapping
-    public ResponseEntity<String> modififyRole(@NotNull @RequestParam Long id,
+    public ResponseEntity<String> modifyRole(@NotNull @RequestParam Long id,
                                                @RequestParam(required = true) Role role) {
         return ResponseEntity.ok(userService.modifyRole(id, role));
-    }
-
-    @Operation(
-            summary = "Modifica la password dell'utente",
-            description = "Aggiorna la credenziale di accesso del profilo utente elaborando i nuovi dati trasmessi nel corpo della richiesta."
-    )
-    @PutMapping("/reset-password")
-    public ResponseEntity<String> modidifyPassword(@Valid @RequestBody UserInputDto inputDto) {
-        return ResponseEntity.ok(userService.modifyPassword(inputDto));
     }
 
     @Operation(
