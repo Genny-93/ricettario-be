@@ -15,9 +15,18 @@ public class RicettaOutputDto {
     private String imgPrincipale;
     private Integer votiTotali;
     private Float valutazioneMedia;
+    private String descBreve;
     private List<CategoriaOutputDto> categorie;
     private List<ComposizioneRicettaOutputDto> composizioneRicetta;
     private List<MultimediaOutputDto> multimedias;
+
+    public String getDescBreve() {
+        return descBreve;
+    }
+
+    public void setDescBreve(String descBreve) {
+        this.descBreve = descBreve;
+    }
 
     public String getImgPrincipale() {
         return imgPrincipale;
