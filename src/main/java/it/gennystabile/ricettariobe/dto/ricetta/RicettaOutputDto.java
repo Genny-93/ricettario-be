@@ -3,6 +3,7 @@ package it.gennystabile.ricettariobe.dto.ricetta;
 import it.gennystabile.ricettariobe.dto.multimedia.MultimediaOutputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.categoria.CategoriaOutputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.composizionericetta.ComposizioneRicettaOutputDto;
+import it.gennystabile.ricettariobe.model.FaseProcedimento;
 
 import java.util.List;
 
@@ -19,6 +20,15 @@ public class RicettaOutputDto {
     private List<CategoriaOutputDto> categorie;
     private List<ComposizioneRicettaOutputDto> composizioneRicetta;
     private List<MultimediaOutputDto> multimedias;
+    private List<FaseProcedimento> procedimento;
+
+    public List<FaseProcedimento> getProcedimento() {
+        return procedimento;
+    }
+
+    public void setProcedimento(List<FaseProcedimento> procedimento) {
+        this.procedimento = procedimento;
+    }
 
     public String getDescBreve() {
         return descBreve;

@@ -1,6 +1,8 @@
 package it.gennystabile.ricettariobe.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,8 +24,9 @@ public class Ricetta {
     @Column(name = "difficolta")
     private Float difficolta;
 
-    @Column(name = "procedimento", columnDefinition = "TEXT")
-    private String procedimento;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "procedimento", columnDefinition = "jsonb")
+    private List<FaseProcedimento> procedimento;
 
     @Column(name = "desc_breve")
     private String descBreve;
@@ -153,11 +156,11 @@ public class Ricetta {
         this.descBreve = descBreve;
     }
 
-    public String getProcedimento() {
+    public List<FaseProcedimento> getProcedimento() {
         return procedimento;
     }
 
-    public void setProcedimento(String procedimento) {
+    public void setProcedimento(List<FaseProcedimento> procedimento) {
         this.procedimento = procedimento;
     }
 

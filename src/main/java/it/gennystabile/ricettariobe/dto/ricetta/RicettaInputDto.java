@@ -3,6 +3,7 @@ package it.gennystabile.ricettariobe.dto.ricetta;
 import it.gennystabile.ricettariobe.dto.multimedia.MultimediaInputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.composizionericetta.ComposizioneRicettaInputDto;
 import it.gennystabile.ricettariobe.model.CategoriaIngrediente;
+import it.gennystabile.ricettariobe.model.FaseProcedimento;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 
@@ -22,8 +23,8 @@ public class RicettaInputDto {
     @DecimalMax(value = "5.0", message = "La difficoltà non può essere superiore a 5.0")
     private Float difficolta;
 
-    @NotBlank
-    private String procedimento;
+    @NotEmpty
+    private List<FaseProcedimento> procedimento;
 
     @NotBlank
     private String descBreve;
@@ -84,11 +85,11 @@ public class RicettaInputDto {
         this.difficolta = difficolta;
     }
 
-    public String getProcedimento() {
+    public @NotEmpty List<FaseProcedimento> getProcedimento() {
         return procedimento;
     }
 
-    public void setProcedimento(String procedimento) {
+    public void setProcedimento(@NotEmpty List<FaseProcedimento> procedimento) {
         this.procedimento = procedimento;
     }
 

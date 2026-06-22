@@ -93,9 +93,6 @@ public class RicettaService {
             ricetta.setCategorie(listaCategorieRicetta);
         }
 
-        //Salvo l'entity per avere id
-
-
         //setto i multimedia collegati alla ricetta, se la lista non è vuota
         if (CollectionUtils.isNotEmpty(ricetta.getMultimedia())) {
             setMultimedia(ricetta.getMultimedia(), ricetta);
