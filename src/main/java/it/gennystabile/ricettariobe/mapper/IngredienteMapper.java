@@ -9,6 +9,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring",uses = {StagioneMapper.class})
 public interface IngredienteMapper {
 
+
     IngredienteOutputDto toOutputDto(Ingrediente inputDto);
 
     @Mapping(target = "stagioni", ignore = true)

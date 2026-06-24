@@ -9,8 +9,8 @@ public class ControllersConstants {
     public static final String REQUEST_MAPPING_AUTH = "/auth";
     public static final String REQUEST_MAPPING_RICETTE = "/recipes";
     public static final String REQUEST_MAPPING_INGREDIENTI = "/ingredients";
-    public static final String REQUEST_MAPPING_CATEGORIE_RICETTE = "/categories";
-    public static final String REQUEST_MAPPING_CATEGORIE_INGREDIENTI = "/categories";
+    public static final String REQUEST_MAPPING_CATEGORIE_RICETTE = "/categories-recipes";
+    public static final String REQUEST_MAPPING_CATEGORIE_INGREDIENTI = "/categories-ingredients";
     public static final String REQUEST_MAPPING_STAGIONI = "/seasons";
 
     //Costanti ROLES

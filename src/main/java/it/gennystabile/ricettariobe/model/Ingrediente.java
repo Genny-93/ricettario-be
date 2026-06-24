@@ -1,13 +1,10 @@
 package it.gennystabile.ricettariobe.model;
 
-
 import it.gennystabile.ricettariobe.utils.enumeration.Colore;
 import jakarta.persistence.*;
 import org.hibernate.annotations.JdbcType;
 import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
-
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Set;
 
 @Entity

@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import it.gennystabile.ricettariobe.dto.ricetta.RicettaCardOutputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.RicettaInputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.RicettaOutputDto;
-import it.gennystabile.ricettariobe.dto.ricetta.categoria.CategoriaOutputDto;
 import it.gennystabile.ricettariobe.service.RicettaService;
 import it.gennystabile.ricettariobe.utils.constant.SecurityConstants;
 import jakarta.validation.Valid;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static it.gennystabile.ricettariobe.utils.constant.ControllersConstants.REQUEST_MAPPING_CATEGORIE_RICETTE;
 import static it.gennystabile.ricettariobe.utils.constant.ControllersConstants.REQUEST_MAPPING_RICETTE;
 
 @RestController
@@ -88,11 +86,7 @@ public class RicettaController {
             summary = "Crea una nuova categoria per le ricette",
             description = "Aggiunge una categoria di classificazione per le ricette tramite il nome passato come parametro della richiesta. Endpoint riservato agli amministratori."
     )
-    @PostMapping(REQUEST_MAPPING_CATEGORIE_RICETTE)
-    @PreAuthorize(SecurityConstants.ADMIN)
-    public ResponseEntity<CategoriaOutputDto> postCategoriaRicetta(@NotBlank @RequestParam String nomeCategoria) {
-        return ResponseEntity.ok(ricettaService.postCategoria(nomeCategoria));
-    }
+
 
     @PutMapping("/{id}/rating")
     public ResponseEntity<Float> aggiornaValutazione(@PathVariable Long id, @NotNull @RequestParam Float voto) {

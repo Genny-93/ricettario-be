@@ -1,23 +1,21 @@
 package it.gennystabile.ricettariobe.dto.ingrediente;
 
-import it.gennystabile.ricettariobe.dto.ingrediente.stagione.StagioneOutputDto;
 import it.gennystabile.ricettariobe.utils.enumeration.Colore;
 
 
-import java.util.Set;
 
 public class IngredienteOutputDto {
 
+    private Long id;
     private String nome;
     private Colore colorePrincipale;
-    private Set<StagioneOutputDto> stagioni;
 
-    public Set<StagioneOutputDto> getStagioni() {
-        return stagioni;
+    public Long getId() {
+        return id;
     }
 
-    public void setStagioni(Set<StagioneOutputDto> stagioni) {
-        this.stagioni = stagioni;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNome() {

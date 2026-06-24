@@ -32,10 +32,22 @@ public class RicettaInputDto {
     @NotEmpty(message = "Inserire almeno una categoria")
     private List<String> categorieRicetta;
 
+    @NotBlank(message = "Inserire l'url dell'immagine principale")
+    private String imgPrincipale;
+
+    //TODO
     private List<MultimediaInputDto> listaMultimedia;
 
     @NotEmpty(message = "La composizione della ricetta non può essere vuota")
     private List<@Valid ComposizioneRicettaInputDto> composizioneRicetta;
+
+    public @NotBlank(message = "Inserire l'url dell'immagine principale") String getImgPrincipale() {
+        return imgPrincipale;
+    }
+
+    public void setImgPrincipale(@NotBlank(message = "Inserire l'url dell'immagine principale") String imgPrincipale) {
+        this.imgPrincipale = imgPrincipale;
+    }
 
     public List<ComposizioneRicettaInputDto> getComposizioneRicetta() {
         return composizioneRicetta;

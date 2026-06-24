@@ -3,10 +3,8 @@ package it.gennystabile.ricettariobe.service;
 import it.gennystabile.ricettariobe.dto.ricetta.RicettaCardOutputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.RicettaInputDto;
 import it.gennystabile.ricettariobe.dto.ricetta.RicettaOutputDto;
-import it.gennystabile.ricettariobe.dto.ricetta.categoria.CategoriaOutputDto;
 import it.gennystabile.ricettariobe.exception.DuplicateException;
 import it.gennystabile.ricettariobe.exception.ResourceNotFoundException;
-import it.gennystabile.ricettariobe.mapper.CategoriaRicettaMapper;
 import it.gennystabile.ricettariobe.mapper.RicettaMapper;
 import it.gennystabile.ricettariobe.model.*;
 import it.gennystabile.ricettariobe.repository.*;
@@ -30,17 +28,15 @@ public class RicettaService {
     private final RicettaMapper ricettaMapper;
     private final MultimediaRepository multimediaRepository;
     private final CategoriaRicettaRepository categoriaRicettaRepository;
-    private final CategoriaRicettaMapper categoriaRicettaMapper;
     private final IngredienteService ingredienteService;
     private final ComposizioneRicettaRepository composizioneRicettaRepository;
 
-    public RicettaService(RicettaRepository ricettaRepository, UserRepository userRepository, RicettaMapper ricettaMapper, MultimediaRepository multimediaRepository, CategoriaRicettaRepository categoriaRicettaRepository, CategoriaRicettaMapper categoriaRicettaMapper, IngredienteService ingredienteService, ComposizioneRicettaRepository composizioneRicettaRepository) {
+    public RicettaService(RicettaRepository ricettaRepository, UserRepository userRepository, RicettaMapper ricettaMapper, MultimediaRepository multimediaRepository, CategoriaRicettaRepository categoriaRicettaRepository, IngredienteService ingredienteService, ComposizioneRicettaRepository composizioneRicettaRepository) {
         this.ricettaRepository = ricettaRepository;
         this.userRepository = userRepository;
         this.ricettaMapper = ricettaMapper;
         this.multimediaRepository = multimediaRepository;
         this.categoriaRicettaRepository = categoriaRicettaRepository;
-        this.categoriaRicettaMapper = categoriaRicettaMapper;
         this.ingredienteService = ingredienteService;
         this.composizioneRicettaRepository = composizioneRicettaRepository;
     }
@@ -120,15 +116,6 @@ public class RicettaService {
         return ricettaMapper.toOutputDto(ricetta);
     }
 
-    public CategoriaOutputDto postCategoria(String nomeCategoria) {
-        if (categoriaRicettaRepository.existsByNomeCategoriaIgnoreCase(nomeCategoria))
-            throw new DuplicateException("Il nome categoria inserito esiste già");
-        CategoriaRicetta categoriaRicetta = new CategoriaRicetta();
-        categoriaRicetta.setNomeCategoria(nomeCategoria);
-
-        return categoriaRicettaMapper.toCategoriaOutputDto(categoriaRicettaRepository.save(categoriaRicetta));
-    }
-
     public List<RicettaCardOutputDto> findRecipesByCategory(String category) {
         List<Ricetta.RicettaCardProjection> listaRicette = ricettaRepository.findByCategorie_NomeCategoriaIgnoreCase(category);
         if (CollectionUtils.isEmpty(listaRicette)) throw new ResourceNotFoundException("Ricette non trovate");
@@ -175,6 +162,8 @@ public class RicettaService {
         ricetta.setUpdatedBy(autore);
         ricetta.setCreatedAt(LocalDateTime.now());
         ricetta.setUpdatedAt(LocalDateTime.now());
+        ricetta.setVotiTotali(0);
+        ricetta.setValutazioneMedia(0F);
     }
 
     private void setMultimedia(List<Multimedia> listaMultimedia, Ricetta ricetta) {

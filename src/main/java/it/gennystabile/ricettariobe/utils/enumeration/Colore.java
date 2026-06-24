@@ -11,5 +11,6 @@ public enum Colore {
     VIOLA,
     ROSA,
     BLU,
+    BEIGE,
     TRASPARENTE
 }
