@@ -25,4 +25,6 @@ public interface RicettaRepository extends JpaRepository<Ricetta, Long> {
 
     List<Ricetta.RicettaCardProjection> findByCategorie_NomeCategoriaIgnoreCase(String nomeCategoria);
 
+    List<Ricetta.RicettaCardProjection> findByCreatedBy_Id(Long createdBy);
+
 }

@@ -127,6 +127,14 @@ public class RicettaService {
                 .toList();
     }
 
+    public List<RicettaCardOutputDto> getRicettaByUserId(Long userId) {
+
+        return ricettaRepository.findByCreatedBy_Id(userId).stream()
+                .map(ricetta -> {
+                    return ricettaMapper.toOutputCardDto(ricetta);
+                }).toList();
+    }
+
     public RicettaOutputDto deleteByNome(String titolo) {
         Ricetta ricetta = ricettaRepository.findByTitolo(titolo).orElseThrow(() -> new ResourceNotFoundException("Risorsa non trovata"));
         ricettaRepository.deleteById(ricetta.getId());

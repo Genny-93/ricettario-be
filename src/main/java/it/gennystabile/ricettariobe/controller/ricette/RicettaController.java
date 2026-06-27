@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,8 +48,8 @@ public class RicettaController {
         return ResponseEntity.ok(ricettaService.getAllRicetteCards());
     }
 
-    @GetMapping("/category/{categoryName}")
-    public ResponseEntity<List<RicettaCardOutputDto>> findRecipesByCategory(@NotBlank @PathVariable String categoryName) {
+    @GetMapping("/search-by-category")
+    public ResponseEntity<List<RicettaCardOutputDto>> findRecipesByCategory(@NotBlank @RequestParam String categoryName) {
         return ResponseEntity.ok(ricettaService.findRecipesByCategory(categoryName));
     }
 
@@ -70,6 +71,12 @@ public class RicettaController {
     public ResponseEntity<RicettaOutputDto> getRicettaByTitolo(@NotBlank @PathVariable String title) {
         RicettaOutputDto ricetta = ricettaService.getRicettaByTitolo(title);
         return (ricetta == null) ? ResponseEntity.noContent().build() : ResponseEntity.ok(ricetta);
+    }
+
+
+    @GetMapping("search-by-user")
+    public ResponseEntity<List<RicettaCardOutputDto>> getRicetteByUser(@RequestParam Long userId) {
+        return ResponseEntity.ok(ricettaService.getRicettaByUserId(userId));
     }
 
     @Operation(

@@ -65,6 +65,10 @@ public class UserService implements UserDetailsService {
         return ("http://localhost:4200/reset-password?token=" + tokenTemporaneo);
     }
 
+    public UserOutputDto getByUsername(String username) {
+        return userMapper.toOutputDto(userRepository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException("Utente non trovat")));
+    }
+
     @Transactional(noRollbackFor = BadRequestException.class)
     public Boolean resetPassword(ResetPasswordRequest request) {
         PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(request.getToken()).orElseThrow(() -> new ResourceNotFoundException("Token non valido"));
@@ -86,7 +90,7 @@ public class UserService implements UserDetailsService {
 
     public UserOutputDto register(UserInputDto userInputDto) {
         User user = userMapper.toUtente(userInputDto);
-        if(userRepository.findByEmailOrUsername(userInputDto.getEmail(),userInputDto.getEmail()).isPresent()){
+        if (userRepository.findByEmailOrUsername(userInputDto.getEmail(), userInputDto.getEmail()).isPresent()) {
             throw new DuplicateException("Email o Username inserite già presenti");
         }
         user.setCreatedAt(LocalDateTime.now());

@@ -5,12 +5,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import it.gennystabile.ricettariobe.dto.auth.LoginRequest;
 import it.gennystabile.ricettariobe.dto.auth.ResetPasswordRequest;
-import it.gennystabile.ricettariobe.dto.user.UserInputDto;
+import it.gennystabile.ricettariobe.dto.user.UserOutputDto;
+import it.gennystabile.ricettariobe.mapper.UserMapper;
 import it.gennystabile.ricettariobe.service.JwtService;
 import it.gennystabile.ricettariobe.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,12 +33,27 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private final UserService userService;
+    private final UserMapper userMapper;
 
 
-    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService, UserService userService) {
+    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService, UserService userService, UserMapper userMapper) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userService = userService;
+        this.userMapper = userMapper;
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserOutputDto> getCurrentUser(Authentication authentication) {
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String username = authentication.getName();
+
+        return ResponseEntity.ok(userService.getByUsername(username));
+
     }
 
     @Operation(
