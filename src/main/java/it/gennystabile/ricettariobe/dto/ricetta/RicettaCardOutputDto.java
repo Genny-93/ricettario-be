@@ -9,6 +9,15 @@ public class RicettaCardOutputDto {
     private Float valutazioneMedia;
     private Short tempoDiPreparazione;
     private String descBreve;
+    private Boolean isFavorite;
+
+    public Boolean getIsFavorite() {
+        return isFavorite;
+    }
+
+    public void setIsFavorite(Boolean favorite) {
+        isFavorite = favorite;
+    }
 
     public String getDescBreve() {
         return descBreve;

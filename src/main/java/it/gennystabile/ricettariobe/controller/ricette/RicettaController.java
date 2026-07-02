@@ -13,7 +13,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,13 +43,13 @@ public class RicettaController {
     }
 
     @GetMapping("/cards")
-    public ResponseEntity<List<RicettaCardOutputDto>> getAllRicetteCards() {
-        return ResponseEntity.ok(ricettaService.getAllRicetteCards());
+    public ResponseEntity<List<RicettaCardOutputDto>> getAllRicetteCards(@RequestParam Long idUser) {
+        return ResponseEntity.ok(ricettaService.getAllRicetteCards(idUser));
     }
 
     @GetMapping("/search-by-category")
-    public ResponseEntity<List<RicettaCardOutputDto>> findRecipesByCategory(@NotBlank @RequestParam String categoryName) {
-        return ResponseEntity.ok(ricettaService.findRecipesByCategory(categoryName));
+    public ResponseEntity<List<RicettaCardOutputDto>> findRecipesByCategory(@NotBlank @RequestParam String categoryName,@RequestParam(required = false) Long idUser) {
+        return ResponseEntity.ok(ricettaService.findRecipesByCategory(categoryName, idUser));
     }
 
     @Operation(
@@ -72,7 +71,6 @@ public class RicettaController {
         RicettaOutputDto ricetta = ricettaService.getRicettaByTitolo(title);
         return (ricetta == null) ? ResponseEntity.noContent().build() : ResponseEntity.ok(ricetta);
     }
-
 
     @GetMapping("search-by-user")
     public ResponseEntity<List<RicettaCardOutputDto>> getRicetteByUser(@RequestParam Long userId) {
@@ -108,6 +106,21 @@ public class RicettaController {
     @PreAuthorize(SecurityConstants.ADMIN)
     public ResponseEntity<RicettaOutputDto> deleteRicettaByTitolo(@NotBlank @RequestParam String titolo) {
         return ResponseEntity.ok(ricettaService.deleteByNome(titolo));
+    }
+
+    @GetMapping("find-favorite")
+    public ResponseEntity<List<RicettaCardOutputDto>> findFavoriteRecipes(@NotNull @RequestParam Long idUser) {
+        return ResponseEntity.ok(ricettaService.findFavoriteRecipes(idUser));
+    }
+
+    @PostMapping("add-favorite")
+    public ResponseEntity<Boolean> addFavoriteRecipe(@NotNull @RequestParam Long idUser, @NotNull @RequestParam Long idRicetta) {
+        return ResponseEntity.ok(ricettaService.addFavoriteRecipe(idRicetta, idUser));
+    }
+
+    @DeleteMapping("delete-favorite")
+    public ResponseEntity<Boolean> deleteFavoriteRecipe(@NotNull @RequestParam Long idUser, @NotNull @RequestParam Long idRicetta) {
+        return ResponseEntity.ok(ricettaService.deleteFavoriteRecipe(idRicetta, idUser));
     }
 
 }

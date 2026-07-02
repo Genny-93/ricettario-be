@@ -29,16 +29,16 @@ public class RicettaService {
     private final MultimediaRepository multimediaRepository;
     private final CategoriaRicettaRepository categoriaRicettaRepository;
     private final IngredienteService ingredienteService;
-    private final ComposizioneRicettaRepository composizioneRicettaRepository;
+    private final RicettaPreferitaRepository ricettaPreferitaRepository;
 
-    public RicettaService(RicettaRepository ricettaRepository, UserRepository userRepository, RicettaMapper ricettaMapper, MultimediaRepository multimediaRepository, CategoriaRicettaRepository categoriaRicettaRepository, IngredienteService ingredienteService, ComposizioneRicettaRepository composizioneRicettaRepository) {
+    public RicettaService(RicettaRepository ricettaRepository, UserRepository userRepository, RicettaMapper ricettaMapper, MultimediaRepository multimediaRepository, CategoriaRicettaRepository categoriaRicettaRepository, IngredienteService ingredienteService, RicettaPreferitaRepository ricettaPreferitaRepository) {
         this.ricettaRepository = ricettaRepository;
         this.userRepository = userRepository;
         this.ricettaMapper = ricettaMapper;
         this.multimediaRepository = multimediaRepository;
         this.categoriaRicettaRepository = categoriaRicettaRepository;
         this.ingredienteService = ingredienteService;
-        this.composizioneRicettaRepository = composizioneRicettaRepository;
+        this.ricettaPreferitaRepository = ricettaPreferitaRepository;
     }
 
 
@@ -49,13 +49,17 @@ public class RicettaService {
                 .toList());
     }
 
-    public List<RicettaCardOutputDto> getAllRicetteCards() {
+    public List<RicettaCardOutputDto> getAllRicetteCards(Long idUser) {
         return ricettaRepository.findAllRecipesForCards().stream()
                 .map(ricetta -> {
-                    return ricettaMapper.toOutputCardDto(ricetta);
+                    RicettaCardOutputDto dtoOutput = ricettaMapper.toOutputCardDto(ricetta);
+                    loadFavorite(idUser, dtoOutput);
+                    return dtoOutput;
                 })
                 .toList();
+
     }
+
 
     public RicettaOutputDto getRicettaById(Long id) {
         Ricetta ricetta = findRicettaById(id);
@@ -116,13 +120,15 @@ public class RicettaService {
         return ricettaMapper.toOutputDto(ricetta);
     }
 
-    public List<RicettaCardOutputDto> findRecipesByCategory(String category) {
+    public List<RicettaCardOutputDto> findRecipesByCategory(String category, Long idUser) {
         List<Ricetta.RicettaCardProjection> listaRicette = ricettaRepository.findByCategorie_NomeCategoriaIgnoreCase(category);
         if (CollectionUtils.isEmpty(listaRicette)) throw new ResourceNotFoundException("Ricette non trovate");
 
         return listaRicette.stream()
                 .map(ricetta -> {
-                    return ricettaMapper.toOutputCardDto(ricetta);
+                    RicettaCardOutputDto dtoOutput = ricettaMapper.toOutputCardDto(ricetta);
+                    loadFavorite(idUser, dtoOutput);
+                    return dtoOutput;
                 })
                 .toList();
     }
@@ -152,6 +158,51 @@ public class RicettaService {
         ricettaRepository.save(ricetta);
         return newValutazioneMedia;
 
+    }
+
+    public List<RicettaCardOutputDto> findFavoriteRecipes(Long idUser) {
+        List<RicettaPreferita> listaRicettePreferite = ricettaPreferitaRepository.findByUtente_Id(idUser);
+        List<RicettaCardOutputDto> listaRicette = new ArrayList<>();
+
+        if (CollectionUtils.isNotEmpty(listaRicettePreferite)) {
+            listaRicettePreferite.forEach(ricettaPreferita -> {
+                listaRicette.add(ricettaMapper.toOutputCardDtoFromRicetta(ricettaPreferita.getRicetta()));
+            });
+        }
+
+        return listaRicette;
+    }
+
+    public Boolean addFavoriteRecipe(Long idRicetta, Long idUser) {
+        if (ricettaPreferitaRepository.existsByUtente_IdAndRicetta_Id(idUser, idRicetta)) {
+            return false;
+        }
+
+        Ricetta ricetta = ricettaRepository.findById(idRicetta)
+                .orElseThrow(() -> new ResourceNotFoundException("Ricetta non presente"));
+
+        User user = userRepository.findById(idUser)
+                .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato"));
+
+        RicettaPreferita ricettaPreferita = new RicettaPreferita();
+        ricettaPreferita.setRicetta(ricetta);
+        ricettaPreferita.setUtente(user);
+        ricettaPreferitaRepository.save(ricettaPreferita);
+        return true;
+    }
+
+    public Boolean deleteFavoriteRecipe(Long idRicetta, Long idUser) {
+        RicettaPreferita ricettaPreferita = new RicettaPreferita();
+        if (!userRepository.existsById(idUser)) {
+            throw new ResourceNotFoundException("Utente non trovato");
+        }
+        if (!ricettaRepository.existsById(idRicetta)) {
+            throw new ResourceNotFoundException("Ricetta non presente");
+        }
+        long righeCancellate = ricettaPreferitaRepository.deleteByUtente_IdAndRicetta_Id(idUser, idRicetta);
+
+        // Ritorna true se il preferito esisteva ed è stato rimosso, false altrimenti
+        return righeCancellate > 0;
     }
 
     //Metodi di Utility
@@ -186,6 +237,9 @@ public class RicettaService {
         });
     }
 
+    private void loadFavorite(Long idUser, RicettaCardOutputDto dtoOutput) {
+        dtoOutput.setIsFavorite(ricettaPreferitaRepository.existsByUtente_IdAndRicetta_Id(idUser, dtoOutput.getId()));
+    }
 
       /* private <T> Ricetta getRicetta(T parametroDiRicerca) {
         return (parametroDiRicerca instanceof String) ?

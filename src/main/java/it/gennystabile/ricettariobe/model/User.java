@@ -29,6 +29,23 @@ public class User implements UserDetails {
     @Column(name = "role", nullable = false)
     private String role;
 
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "createdBy")
+    private List<Ricetta> listaRicette;
+
+    @OneToMany(mappedBy = "utente", fetch = FetchType.LAZY)
+    private List<RicettaPreferita> listaPreferiti;
+
+    public List<RicettaPreferita> getListaPreferiti() {
+        return listaPreferiti;
+    }
+
+    public void setListaPreferiti(List<RicettaPreferita> listaPreferiti) {
+        this.listaPreferiti = listaPreferiti;
+    }
+
     public String getRole() {
         return role;
     }
@@ -36,12 +53,6 @@ public class User implements UserDetails {
     public void setRole(String role) {
         this.role = role;
     }
-
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @OneToMany(mappedBy = "createdBy")
-    private List<Ricetta> listaRicette;
 
     public List<Ricetta> getListaRicette() {
         return listaRicette;

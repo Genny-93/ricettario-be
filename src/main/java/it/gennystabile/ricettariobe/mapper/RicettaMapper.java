@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring", uses = {CategoriaRicettaMapper.class, ComposizioneRicettaMapper.class, IngredienteMapper.class})
 public interface RicettaMapper {
 
+
     RicettaOutputDto toOutputDto(Ricetta ricetta);
 
     @Mapping(target = "multimedia", source = "listaMultimedia")
@@ -17,4 +18,6 @@ public interface RicettaMapper {
 
     //Uso Projection in JPA
     RicettaCardOutputDto toOutputCardDto(Ricetta.RicettaCardProjection ricetta);
+
+    RicettaCardOutputDto toOutputCardDtoFromRicetta(Ricetta ricetta);
 }

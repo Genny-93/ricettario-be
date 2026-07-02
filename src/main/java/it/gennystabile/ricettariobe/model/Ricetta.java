@@ -68,6 +68,17 @@ public class Ricetta {
     @OneToMany(mappedBy = "ricetta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Multimedia> multimedia;
 
+    @OneToMany(mappedBy = "ricetta", fetch = FetchType.LAZY)
+    private List<RicettaPreferita> listaRicette;
+
+    public List<RicettaPreferita> getListaRicette() {
+        return listaRicette;
+    }
+
+    public void setListaRicette(List<RicettaPreferita> listaRicette) {
+        this.listaRicette = listaRicette;
+    }
+
     public List<ComposizioneRicetta> getComposizioneRicetta() {
         return composizioneRicetta;
     }
