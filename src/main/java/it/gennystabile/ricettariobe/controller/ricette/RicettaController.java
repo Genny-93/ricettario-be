@@ -73,8 +73,8 @@ public class RicettaController {
     }
 
     @GetMapping("search-by-user")
-    public ResponseEntity<List<RicettaCardOutputDto>> getRicetteByUser(@RequestParam Long userId) {
-        return ResponseEntity.ok(ricettaService.getRicettaByUserId(userId));
+    public ResponseEntity<List<RicettaCardOutputDto>> getRicetteByUser(@RequestParam Long authorId) {
+        return ResponseEntity.ok(ricettaService.getRicettaByUserId(authorId));
     }
 
     @Operation(
