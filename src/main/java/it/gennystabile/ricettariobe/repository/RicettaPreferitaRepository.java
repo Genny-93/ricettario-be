@@ -14,11 +14,15 @@ public interface RicettaPreferitaRepository extends JpaRepository<RicettaPreferi
 
     List<RicettaPreferita> findByUtente_Id(Long idUtente);
 
+    List<RicettaPreferita> findByUtente_Username(String username);
+
     Optional<RicettaPreferita> findByUtenteAndRicetta(User utente, Ricetta ricetta);
 
     boolean existsByUtente_IdAndRicetta_Id(Long idUtente, Long idRicetta);
 
-    Long deleteByUtente_IdAndRicetta_Id(Long idUtente, Long idRicetta);
+    boolean existsByUtente_UsernameAndRicetta_Id(String username, Long idRicetta);
+
+    Long deleteByUtente_UsernameAndRicetta_Id(String username, Long idRicetta);
 
 
 }

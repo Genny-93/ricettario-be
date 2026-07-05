@@ -44,7 +44,7 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserOutputDto> getCurrentUser(Authentication authentication) {
+    public ResponseEntity<String> getCurrentUser(Authentication authentication) {
 
         if (authentication == null || !authentication.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -52,7 +52,7 @@ public class AuthController {
 
         String username = authentication.getName();
 
-        return ResponseEntity.ok(userService.getByUsername(username));
+        return ResponseEntity.ok(username);
 
     }
 

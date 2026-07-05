@@ -50,11 +50,11 @@ public class RicettaService {
                 .toList());
     }
 
-    public List<RicettaCardOutputDto> getAllRicetteCards(Long idUser) {
+    public List<RicettaCardOutputDto> getAllRicetteCards(String username) {
         return ricettaRepository.findAllRecipesForCards().stream()
                 .map(ricetta -> {
                     RicettaCardOutputDto dtoOutput = ricettaMapper.toOutputCardDto(ricetta);
-                    loadFavorite(idUser, dtoOutput);
+                    loadFavorite(username, dtoOutput);
                     return dtoOutput;
                 })
                 .toList();
@@ -121,25 +121,25 @@ public class RicettaService {
         return ricettaMapper.toOutputDto(ricetta);
     }
 
-    public List<RicettaCardOutputDto> findRecipesByCategory(String category, Long idUser) {
+    public List<RicettaCardOutputDto> findRecipesByCategory(String category, String username) {
         List<Ricetta.RicettaCardProjection> listaRicette = ricettaRepository.findByCategorie_NomeCategoriaIgnoreCase(category);
         if (CollectionUtils.isEmpty(listaRicette)) throw new ResourceNotFoundException("Ricette non trovate");
 
         return listaRicette.stream()
                 .map(ricetta -> {
                     RicettaCardOutputDto dtoOutput = ricettaMapper.toOutputCardDto(ricetta);
-                    loadFavorite(idUser, dtoOutput);
+                    loadFavorite(username, dtoOutput);
                     return dtoOutput;
                 })
                 .toList();
     }
 
-    public List<RicettaCardOutputDto> getRicettaByUserId(Long authorId) {
+    public List<RicettaCardOutputDto> getRicettaByUsername(String username) {
 
-        return ricettaRepository.findByCreatedBy_Id(authorId).stream()
+        return ricettaRepository.findByCreatedBy_Username(username).stream()
                 .map(ricetta -> {
                     RicettaCardOutputDto ricettaOutputDto = ricettaMapper.toOutputCardDto(ricetta);
-                    loadFavorite(authorId,ricettaOutputDto);
+                    loadFavorite(username,ricettaOutputDto);
                     return ricettaOutputDto;
                 }).toList();
     }
@@ -163,8 +163,8 @@ public class RicettaService {
 
     }
 
-    public List<RicettaCardOutputDto> findFavoriteRecipes(Long idUser) {
-        List<RicettaPreferita> listaRicettePreferite = ricettaPreferitaRepository.findByUtente_Id(idUser);
+    public List<RicettaCardOutputDto> findFavoriteRecipes(String username) {
+        List<RicettaPreferita> listaRicettePreferite = ricettaPreferitaRepository.findByUtente_Username(username);
         List<RicettaCardOutputDto> listaRicette = new ArrayList<>();
 
         if (CollectionUtils.isNotEmpty(listaRicettePreferite)) {
@@ -178,15 +178,15 @@ public class RicettaService {
         return listaRicette;
     }
 
-    public Boolean addFavoriteRecipe(Long idRicetta, Long idUser) {
-        if (ricettaPreferitaRepository.existsByUtente_IdAndRicetta_Id(idUser, idRicetta)) {
+    public Boolean addFavoriteRecipe(Long idRicetta, String username) {
+        if (ricettaPreferitaRepository.existsByUtente_UsernameAndRicetta_Id(username, idRicetta)) {
             return false;
         }
 
         Ricetta ricetta = ricettaRepository.findById(idRicetta)
                 .orElseThrow(() -> new ResourceNotFoundException("Ricetta non presente"));
 
-        User user = userRepository.findById(idUser)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Utente non trovato"));
 
         RicettaPreferita ricettaPreferita = new RicettaPreferita();
@@ -196,15 +196,15 @@ public class RicettaService {
         return true;
     }
 
-    public Boolean deleteFavoriteRecipe(Long idRicetta, Long idUser) {
+    public Boolean deleteFavoriteRecipe(Long idRicetta, String username) {
         RicettaPreferita ricettaPreferita = new RicettaPreferita();
-        if (!userRepository.existsById(idUser)) {
+        if (!userRepository.existsByUsername(username)) {
             throw new ResourceNotFoundException("Utente non trovato");
         }
         if (!ricettaRepository.existsById(idRicetta)) {
             throw new ResourceNotFoundException("Ricetta non presente");
         }
-        long righeCancellate = ricettaPreferitaRepository.deleteByUtente_IdAndRicetta_Id(idUser, idRicetta);
+        long righeCancellate = ricettaPreferitaRepository.deleteByUtente_UsernameAndRicetta_Id(username, idRicetta);
 
         // Ritorna true se il preferito esisteva ed è stato rimosso, false altrimenti
         return righeCancellate > 0;
@@ -244,6 +244,10 @@ public class RicettaService {
 
     private void loadFavorite(Long idUser, RicettaCardOutputDto dtoOutput) {
         dtoOutput.setIsFavorite(ricettaPreferitaRepository.existsByUtente_IdAndRicetta_Id(idUser, dtoOutput.getId()));
+    }
+
+    private void loadFavorite(String username, RicettaCardOutputDto dtoOutput) {
+        dtoOutput.setIsFavorite(ricettaPreferitaRepository.existsByUtente_UsernameAndRicetta_Id(username, dtoOutput.getId()));
     }
 
       /* private <T> Ricetta getRicetta(T parametroDiRicerca) {

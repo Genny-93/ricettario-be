@@ -43,13 +43,13 @@ public class RicettaController {
     }
 
     @GetMapping("/cards")
-    public ResponseEntity<List<RicettaCardOutputDto>> getAllRicetteCards(@RequestParam Long idUser) {
-        return ResponseEntity.ok(ricettaService.getAllRicetteCards(idUser));
+    public ResponseEntity<List<RicettaCardOutputDto>> getAllRicetteCards(@RequestParam String username) {
+        return ResponseEntity.ok(ricettaService.getAllRicetteCards(username));
     }
 
     @GetMapping("/search-by-category")
-    public ResponseEntity<List<RicettaCardOutputDto>> findRecipesByCategory(@NotBlank @RequestParam String categoryName,@RequestParam(required = false) Long idUser) {
-        return ResponseEntity.ok(ricettaService.findRecipesByCategory(categoryName, idUser));
+    public ResponseEntity<List<RicettaCardOutputDto>> findRecipesByCategory(@NotBlank @RequestParam String categoryName,@RequestParam(required = false) String username) {
+        return ResponseEntity.ok(ricettaService.findRecipesByCategory(categoryName, username));
     }
 
     @Operation(
@@ -73,8 +73,8 @@ public class RicettaController {
     }
 
     @GetMapping("search-by-user")
-    public ResponseEntity<List<RicettaCardOutputDto>> getRicetteByUser(@RequestParam Long authorId) {
-        return ResponseEntity.ok(ricettaService.getRicettaByUserId(authorId));
+    public ResponseEntity<List<RicettaCardOutputDto>> getRicetteByUser(@RequestParam String username) {
+        return ResponseEntity.ok(ricettaService.getRicettaByUsername(username));
     }
 
     @Operation(
@@ -109,18 +109,18 @@ public class RicettaController {
     }
 
     @GetMapping("find-favorite")
-    public ResponseEntity<List<RicettaCardOutputDto>> findFavoriteRecipes(@NotNull @RequestParam Long idUser) {
-        return ResponseEntity.ok(ricettaService.findFavoriteRecipes(idUser));
+    public ResponseEntity<List<RicettaCardOutputDto>> findFavoriteRecipes(@NotNull @RequestParam String username) {
+        return ResponseEntity.ok(ricettaService.findFavoriteRecipes(username));
     }
 
     @PostMapping("add-favorite")
-    public ResponseEntity<Boolean> addFavoriteRecipe(@NotNull @RequestParam Long idUser, @NotNull @RequestParam Long idRicetta) {
-        return ResponseEntity.ok(ricettaService.addFavoriteRecipe(idRicetta, idUser));
+    public ResponseEntity<Boolean> addFavoriteRecipe(@NotNull @RequestParam String username, @NotNull @RequestParam Long idRicetta) {
+        return ResponseEntity.ok(ricettaService.addFavoriteRecipe(idRicetta, username));
     }
 
     @DeleteMapping("delete-favorite")
-    public ResponseEntity<Boolean> deleteFavoriteRecipe(@NotNull @RequestParam Long idUser, @NotNull @RequestParam Long idRicetta) {
-        return ResponseEntity.ok(ricettaService.deleteFavoriteRecipe(idRicetta, idUser));
+    public ResponseEntity<Boolean> deleteFavoriteRecipe(@NotNull @RequestParam String username, @NotNull @RequestParam Long idRicetta) {
+        return ResponseEntity.ok(ricettaService.deleteFavoriteRecipe(idRicetta, username));
     }
 
 }

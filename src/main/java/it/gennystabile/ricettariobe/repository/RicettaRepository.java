@@ -27,5 +27,7 @@ public interface RicettaRepository extends JpaRepository<Ricetta, Long> {
 
     List<Ricetta.RicettaCardProjection> findByCreatedBy_Id(Long createdBy);
 
+    List<Ricetta.RicettaCardProjection> findByCreatedBy_Username(String username);
+
 
 }
