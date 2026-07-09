@@ -8,8 +8,11 @@ import it.gennystabile.ricettariobe.exception.ResourceNotFoundException;
 import it.gennystabile.ricettariobe.mapper.RicettaMapper;
 import it.gennystabile.ricettariobe.model.*;
 import it.gennystabile.ricettariobe.repository.*;
+import it.gennystabile.ricettariobe.specification.RicettaSpecifications;
 import it.gennystabile.ricettariobe.utils.CollectionUtils;
 import it.gennystabile.ricettariobe.utils.enumeration.TipoFile;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -139,15 +142,15 @@ public class RicettaService {
         return ricettaRepository.findByCreatedBy_Username(username).stream()
                 .map(ricetta -> {
                     RicettaCardOutputDto ricettaOutputDto = ricettaMapper.toOutputCardDto(ricetta);
-                    loadFavorite(username,ricettaOutputDto);
+                    loadFavorite(username, ricettaOutputDto);
                     return ricettaOutputDto;
                 }).toList();
     }
 
-    public RicettaOutputDto deleteByNome(String titolo) {
-        Ricetta ricetta = ricettaRepository.findByTitolo(titolo).orElseThrow(() -> new ResourceNotFoundException("Risorsa non trovata"));
+    public Boolean deleteByNome(String titolo) {
+        Ricetta ricetta = ricettaRepository.findByTitolo(titolo).orElseThrow(() -> new ResourceNotFoundException("Ricetta non trovata"));
         ricettaRepository.deleteById(ricetta.getId());
-        return ricettaMapper.toOutputDto(ricetta);
+        return true;
     }
 
     public Float aggiornaValutazione(Long id, Float voto) {
@@ -208,6 +211,29 @@ public class RicettaService {
 
         // Ritorna true se il preferito esisteva ed è stato rimosso, false altrimenti
         return righeCancellate > 0;
+    }
+
+    public List<RicettaCardOutputDto> findRecipesWithFilters(String username,
+                                                             String category,
+                                                             Float maxTempoDiCottura,
+                                                             Float minTempoDiCottura,
+                                                             String difficolta,
+                                                             Float valutazioneMedia,
+                                                             boolean order) {
+        Specification<Ricetta> spec = Specification
+                .where(RicettaSpecifications.hasUsername(username))
+                .and(RicettaSpecifications.hasCategory(category))
+                .and(RicettaSpecifications.maxTempo(maxTempoDiCottura))
+                .and(RicettaSpecifications.minTempo(minTempoDiCottura))
+                .and(RicettaSpecifications.hasDifficolta(difficolta))
+                .and(RicettaSpecifications.minValutazione(valutazioneMedia));
+
+        Sort sort = Sort.by((order) ? Sort.Direction.DESC : Sort.Direction.ASC,"titolo");
+
+        return ricettaRepository.findAll(spec, sort).stream()
+                .map(ricetta -> {
+                    return ricettaMapper.toOutputCardDtoFromRicetta(ricetta);
+                }).toList();
     }
 
     //Metodi di Utility

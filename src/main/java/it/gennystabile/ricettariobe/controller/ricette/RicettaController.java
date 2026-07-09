@@ -9,6 +9,8 @@ import it.gennystabile.ricettariobe.dto.ricetta.RicettaOutputDto;
 import it.gennystabile.ricettariobe.service.RicettaService;
 import it.gennystabile.ricettariobe.utils.constant.SecurityConstants;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
@@ -47,8 +49,21 @@ public class RicettaController {
         return ResponseEntity.ok(ricettaService.getAllRicetteCards(username));
     }
 
+    @GetMapping("/search-recipes")
+    public ResponseEntity<List<RicettaCardOutputDto>> findRecipesWithFilters(
+            @RequestParam(required = false) String username,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) Float maxTempoDiCottura,
+            @RequestParam(required = false) Float minTempoDiCottura,
+            @RequestParam(required = false) String difficolta,
+            @RequestParam(required = false) Float valutazioneMedia,
+            @RequestParam(required = false, defaultValue = "false") boolean order
+    ) {
+        return ResponseEntity.ok(ricettaService.findRecipesWithFilters(username, category, maxTempoDiCottura, minTempoDiCottura, difficolta, valutazioneMedia, order));
+    }
+
     @GetMapping("/search-by-category")
-    public ResponseEntity<List<RicettaCardOutputDto>> findRecipesByCategory(@NotBlank @RequestParam String categoryName,@RequestParam(required = false) String username) {
+    public ResponseEntity<List<RicettaCardOutputDto>> findRecipesByCategory(@NotBlank @RequestParam String categoryName, @RequestParam(required = false) String username) {
         return ResponseEntity.ok(ricettaService.findRecipesByCategory(categoryName, username));
     }
 
@@ -94,7 +109,7 @@ public class RicettaController {
 
 
     @PutMapping("/{id}/rating")
-    public ResponseEntity<Float> aggiornaValutazione(@PathVariable Long id, @NotNull @RequestParam Float voto) {
+    public ResponseEntity<Float> aggiornaValutazione(@PathVariable Long id, @NotNull @DecimalMin("1.0") @DecimalMax("5.0") @RequestParam Float voto) {
         return ResponseEntity.ok(ricettaService.aggiornaValutazione(id, voto));
     }
 
@@ -104,7 +119,7 @@ public class RicettaController {
     )
     @DeleteMapping
     @PreAuthorize(SecurityConstants.ADMIN)
-    public ResponseEntity<RicettaOutputDto> deleteRicettaByTitolo(@NotBlank @RequestParam String titolo) {
+    public ResponseEntity<Boolean> deleteRicettaByTitolo(@NotBlank @RequestParam String titolo) {
         return ResponseEntity.ok(ricettaService.deleteByNome(titolo));
     }
 

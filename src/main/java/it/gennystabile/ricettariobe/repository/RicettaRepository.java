@@ -2,6 +2,7 @@ package it.gennystabile.ricettariobe.repository;
 
 import it.gennystabile.ricettariobe.model.Ricetta;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface RicettaRepository extends JpaRepository<Ricetta, Long> {
+public interface RicettaRepository extends JpaRepository<Ricetta, Long>, JpaSpecificationExecutor<Ricetta> {
 
     Optional<Ricetta> findByTitolo(String titolo);
 
